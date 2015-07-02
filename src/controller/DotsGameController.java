@@ -56,6 +56,9 @@ public class DotsGameController implements GameController {
     /** Time in milliseconds for the player to get ready after pressing start */
     final static int GET_READY_TIME = 2000;
     
+    /** Time in milliseconds that the DotSets flash */
+    final static int FLASH_TIME = 200;
+    
     /** DataWriter to export data to CSV. */
     private DataWriter dataWriter;
     
@@ -193,7 +196,6 @@ public class DotsGameController implements GameController {
         this.feedbackSound(feedbackSoundFileUrl, correct); 
         
         this.dataWriter.grabData(this);
-
     }
     
     /** Update the player appropriately.
@@ -309,7 +311,8 @@ public class DotsGameController implements GameController {
                 theView.getGetReadyBar().setOpacity(0.0);
             }
         });
-        new Thread(sleeper).start();
+        Thread sleeperThread = new Thread(sleeper);
+        sleeperThread.start();
     }
     
     /**
@@ -318,7 +321,7 @@ public class DotsGameController implements GameController {
      */
     public void prepareNextRound() {
         recordResponseTime();
-        clearRound();
+        //clearRound();
         waitBeforeNextRoundAndUpdate(TIME_BETWEEN_ROUNDS);
     }
     
@@ -368,7 +371,8 @@ public class DotsGameController implements GameController {
                 getTheView().getGetReady().setText("");
             }
         });
-        new Thread(sleeper).start();
+        Thread sleeperThread = new Thread(sleeper);
+        sleeperThread.start();
     }
 
     /**
@@ -382,25 +386,44 @@ public class DotsGameController implements GameController {
         
         dotSetOne = this.currentDotsPair.getDotSetOne();
         dotSetTwo = this.currentDotsPair.getDotSetTwo();
+        this.flash();
         
         this.paintDotSet(dotSetOne, gcLeft);
         this.paintDotSet(dotSetTwo, gcRight);
-//        theView.getLeftOption().setText(String.valueOf(dotSetOne));
-//        theView.getRightOption().setText(String.valueOf(dotSetTwo));
 
     }
     
+    private void flash() {
+        
+        Task<Void> sleeper = new Task<Void>() {
+            @Override
+            protected java.lang.Void call() throws Exception {
+                Thread.sleep(FLASH_TIME);
+                return null;
+            }    
+        };
+        sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                gameController.clearRound();    
+            }
+        });
+        new Thread(sleeper).start();
+    }
+
     /**
      * Paint the dots.
      * @param 
      */
     private void paintDotSet(DotSet dotSet, GraphicsContext graphicsContext) {
         for (int i = 0; i < dotSet.getTotalNumDots(); i++) {
-            System.out.println("FILLING: " + i);
-//            System.out.println(dotSet.getTotalNumDots());
-//            System.out.println(dotSet.getPositions().size());
+            
             int x = dotSet.getPositions().get(i).x;
             int y = dotSet.getPositions().get(i).y;
+            System.out.println("painting!");
+     
+            System.out.println("i: " + i);
+            System.out.println(dotSet.getTotalNumDots());
             graphicsContext.fillOval(x, y, 
                     dotSet.getDiameters().get(i), 
                     dotSet.getDiameters().get(i));
