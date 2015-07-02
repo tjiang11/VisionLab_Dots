@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Random;
 public class DotsPairGenerator implements PairGenerator {
     
     /** Number of characters to choose from. */
-    static final int NUM_LETTERS = 26;
+    static final int MAX_DOTS = 26;
     
     /** Map from each difficulty mode to an integer representation. */
     static final int EASY_MODE = 0;
@@ -33,6 +34,11 @@ public class DotsPairGenerator implements PairGenerator {
     /** The highest distance each difficulty can have is their minimum plus NUM_CHOICES_IN_MODE. */
     static final int NUM_CHOICES_IN_MODE = 4;
     
+    /**
+     * Number of triplets of modes per set. See fillDifficultySet().
+     */
+    static final int NUM_MODE_TRIPLETS = 2;
+    
     /** Random number generator. */
     Random randomGenerator = new Random();
 
@@ -41,6 +47,9 @@ public class DotsPairGenerator implements PairGenerator {
     
     /** The difficulty setting: EASY, MEDIUM, HARD */
     private int difficultyMode;
+    
+    /** The list containing the difficulties. */
+    private ArrayList<Integer> difficultySet;
     
     /** A measure of how many times the same side has been correct. */
     private int sameChoice;
@@ -56,6 +65,8 @@ public class DotsPairGenerator implements PairGenerator {
         this.setSameChoice(0);
         this.setLastWasLeft(false);
         this.setDifficultyMode(EASY_MODE);
+        this.difficultySet = new ArrayList<Integer>();
+        this.fillDifficultySet();
     }
     
     /**
@@ -66,13 +77,42 @@ public class DotsPairGenerator implements PairGenerator {
      */
     public void getNewPair() {
         System.out.println(this.getSameChoice());
-        int letterOne, letterTwo;
-        letterOne = this.randomGenerator.nextInt(NUM_LETTERS);
+        int dotSetOne, dotSetTwo;
+        dotSetOne = this.randomGenerator.nextInt(MAX_DOTS) + 1;
         do {
-            letterTwo = this.randomGenerator.nextInt(NUM_LETTERS); 
-        } while (letterOne == letterTwo);        
+            dotSetTwo = this.randomGenerator.nextInt(MAX_DOTS) + 1; 
+        } while (dotSetOne == dotSetTwo);        
            
-        this.checkAndSet(letterOne, letterTwo);
+        this.checkAndSet(dotSetOne, dotSetTwo);
+    }
+    
+    /**
+     * This is how the difficulty is pseudo-randomly decided:
+     * 
+     * There will be a list (difficultySet) containing triplets of modes, 
+     * where each triplet would contain one of each difficulty mode.
+     * NUM_MODE_SETS is the number of triplets that the difficultySet contains.
+     * 
+     * When resetting the difficulty <setDifficulty()>, one mode will be randomly selected
+     * from the difficultySet and removed. This repeats until difficultySet
+     * is empty where it will then refill.
+     * 
+     */
+    private void fillDifficultySet() {
+        for (int i = 0; i < NUM_MODE_TRIPLETS; i++) {
+            this.difficultySet.add(EASY_MODE);
+            this.difficultySet.add(MEDIUM_MODE);
+            this.difficultySet.add(HARD_MODE);
+        }
+    }
+    
+    public void setDifficulty() {
+        this.difficultyMode = 
+                this.difficultySet.remove(
+                        randomGenerator.nextInt(this.difficultySet.size()));
+        if (this.difficultySet.isEmpty()) {
+            this.fillDifficultySet();
+        }
     }
     
     /**
@@ -95,33 +135,33 @@ public class DotsPairGenerator implements PairGenerator {
      * @param difference distance between the letters.
      */
     public void getNewPair(int difference) {
-        int letterOne, letterTwo;
-        letterOne = this.randomGenerator.nextInt(NUM_LETTERS - difference);
-        letterTwo = letterOne + difference;
+        int dotSetOne, dotSetTwo;
+        dotSetOne = this.randomGenerator.nextInt(MAX_DOTS - difference) + 1;
+        dotSetTwo = dotSetOne + difference;
         
         //Swap the order
         int x = this.randomGenerator.nextInt(2);
         if (x == 1) {
-            int temp = letterTwo;
-            letterTwo = letterOne;
-            letterOne = temp;
+            int temp = dotSetTwo;
+            dotSetTwo = dotSetOne;
+            dotSetOne = temp;
         }
-        this.checkAndSet(letterOne, letterTwo);
+        this.checkAndSet(dotSetOne, dotSetTwo);
     }
     
     /**
      * Check if choices are the same and set the reverse if the same side has been
      * correct for MAX_TIMES_SAME_ANSWER times in a row.
-     * @param letterOne
-     * @param letterTwo
+     * @param dotSetOne
+     * @param dotSetTwo
      */
-    private void checkAndSet(int letterOne, int letterTwo) {
-        this.checkSameChoice(letterOne, letterTwo);
+    private void checkAndSet(int dotSetOne, int dotSetTwo) {
+        this.checkSameChoice(dotSetOne, dotSetTwo);
         
         if (this.getSameChoice() >= MAX_TIMES_SAME_ANSWER) {
-            this.setReversePair(letterOne, letterTwo);
+            this.setReversePair(dotSetOne, dotSetTwo);
         } else {
-            this.setDotsPair(new DotsPair(letterOne, letterTwo));
+            this.setDotsPair(new DotsPair(dotSetOne, dotSetTwo));
         }
     }
     
@@ -136,22 +176,22 @@ public class DotsPairGenerator implements PairGenerator {
      * of which each component of the pair is being shown, so the opposite
      * side will be correct after setting the alpha pair in reverse order.
      * 
-     * @param letterOne 
-     * @param letterTwo
+     * @param dotSetOne 
+     * @param dotSetTwo
      */
-    public void setReversePair(int letterOne, int letterTwo) {
-        this.setDotsPair(new DotsPair(letterTwo, letterOne));
+    public void setReversePair(int dotSetOne, int dotSetTwo) {
+        this.setDotsPair(new DotsPair(dotSetTwo, dotSetOne));
         this.toggleLastWasLeft();
         this.setSameChoice(0);
     }
 
     /**
      * Check if the same side is correct as the last round.
-     * @param letterOne Position of first letter of current round.
-     * @param letterTwo Position of second letter of current round.
+     * @param dotSetOne Position of first letter of current round.
+     * @param dotSetTwo Position of second letter of current round.
      */
-    public void checkSameChoice(int letterOne, int letterTwo) {
-        if (letterOne > letterTwo) {
+    public void checkSameChoice(int dotSetOne, int dotSetTwo) {
+        if (dotSetOne > dotSetTwo) {
             if (this.lastWasLeft) {
                 this.incrementSameChoice();
             } else {

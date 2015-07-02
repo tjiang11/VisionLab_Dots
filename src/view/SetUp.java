@@ -4,7 +4,6 @@ import controller.DotsGameController;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -16,7 +15,6 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -82,10 +80,10 @@ public final class SetUp {
     static final int GET_READY_Y = 230;
     static final int GET_READY_BAR_X = GET_READY_X - 27;
     static final int GET_READY_BAR_Y = GET_READY_Y + 70;
-    static final int FIRST_STAR_X = 415;
-    static final int STAR_Y = -35;
-    static final int STAR_SHIFT = 30;
-    static final double STAR_SCALE = .23;
+    static final int FIRST_STAR_X = 705;
+    static final int STAR_Y = -25;
+    static final int STAR_SHIFT = 35;
+    static final double STAR_SCALE = .28;
     /** Font size of the letter options. */
     static final int LETTER_SIZE = 100;
     
@@ -94,11 +92,11 @@ public final class SetUp {
      */
     /** Position of message congratulating subject on completing
      * the experiment. */
-    static final int CONGRATS_X = 203;
-    static final int CONGRATS_Y = 170;
+    static final int CONGRATS_X = 348;
+    static final int CONGRATS_Y = 270;
     /** Position of message with subject's score. */
-    static final int SCORE_X = 183;
-    static final int SCORE_Y = 200;
+    static final int SCORE_X = 328;
+    static final int SCORE_Y = 300;
     
     /** Disable constructing of an object. */
     private SetUp() {

@@ -13,7 +13,7 @@ public interface GameController {
     /** Number of rounds. One round is one pair of options. */
     public static final int NUM_ROUNDS = 40;
     /** Time between rounds in milliseconds. */
-    public static final int TIME_BETWEEN_ROUNDS = 1000;
+    public static final int TIME_BETWEEN_ROUNDS = 10;
     /** Number of rounds for each difficulty setting. */
     public static final int ROUNDS_PER_DIFFICULTY = NUM_ROUNDS / 3;
     

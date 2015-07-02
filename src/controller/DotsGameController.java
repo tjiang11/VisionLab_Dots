@@ -47,6 +47,12 @@ import view.GameGUI;
  */
 public class DotsGameController implements GameController {
     
+    final static Color CANVAS_COLOR = Color.BEIGE;
+    final static Color DOT_COLOR = Color.GREEN;
+    
+    /** Punish for wrong answers */
+    static final boolean PUNISH = true;
+    
     /** Time in milliseconds for the player to get ready after pressing start */
     final static int GET_READY_TIME = 2000;
     
@@ -59,7 +65,11 @@ public class DotsGameController implements GameController {
     private GameGUI theView;
     /** The current scene. */
     private Scene theScene;
-
+    /** Left Canvas Graphics Context */
+    private GraphicsContext gcLeft;
+    /** Right Canvas Graphics Context */
+    private GraphicsContext gcRight;
+    
     /** The subject. */
     private Player thePlayer;
     /** The current DotsPair being evaluated by the subject. */
@@ -89,6 +99,7 @@ public class DotsGameController implements GameController {
         this.theScene = view.getScene();
         this.thePlayer = new Player();
         this.dataWriter = new DataWriter(this);
+
     }
     
     /**
@@ -101,7 +112,7 @@ public class DotsGameController implements GameController {
         
         this.theView.getStart().setOnAction(e -> theView.setGameScreen(
                 theView.getPrimaryStage(), theView.getEnterId().getText(), this));
-        
+
         this.theScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -142,7 +153,7 @@ public class DotsGameController implements GameController {
                     dataWriter.writeToCSV();
                     
                     /** Set difficulty of DotsPairGenerator */
-                    gameController.dpg.setRandomDifficulty();       
+                    gameController.dpg.setDifficulty();       
                 }
                 /**
                  * If subject has completed the total number of rounds specified,
@@ -175,7 +186,7 @@ public class DotsGameController implements GameController {
         
         correct = GameLogic.checkAnswerCorrect(e, dotsPair);
         
-        if (correct) { this.updateProgressBar(view); }
+        this.updateProgressBar(view, correct);
         
         this.updatePlayer(currentPlayer, correct);   
         
@@ -204,26 +215,41 @@ public class DotsGameController implements GameController {
      * Update the progressbar. Resets to zero if progress bar is full.
      * @param pb The view's progress bar.
      */
-    private void updateProgressBar(GameGUI view) {
-        view.getProgressBar().setProgress(view.getProgressBar().getProgress() + .25);
-        if (view.getProgressBar().getProgress() >= 1.25) {
-//            view.getProgressBar().setStyle(""
-//                    + "-fx-accent: green; "
-//                    + "-fx-control-inner-background: #0094C5 ;");
-            view.getProgressBar().setProgress(0.5);
-            
-            URL powerUpSound = getClass().getResource("/res/sounds/Powerup.wav");
-            new AudioClip(powerUpSound.toString()).play();
-            
-            int starToReveal = this.thePlayer.getNumStars();
-            view.getStarNodes()[starToReveal].setVisible(true);
-            this.thePlayer.incrementNumStars();
-            
-            if (this.thePlayer.getNumStars() > 2) {
-                view.changeBackground(1);
+    /**
+     * Update the progressbar. Resets to zero if progress bar is full.
+     * @param pb The view's progress bar.
+     */
+    private void updateProgressBar(GameGUI view, boolean correct) {
+        if (correct) {
+            if (view.getProgressBar().isIndeterminate()) {
+                view.getProgressBar().setProgress(0.0);
+                view.getProgressBar().setStyle("-fx-accent: #0094C5;");
+            }
+            view.getProgressBar().setProgress(view.getProgressBar().getProgress() + .25);
+            if (view.getProgressBar().getProgress() >= 1.00) {
+                view.getProgressBar().setProgress(0.25);
+                
+                URL powerUpSound = getClass().getResource("/res/sounds/Powerup.wav");
+                new AudioClip(powerUpSound.toString()).play();
+                
+                int starToReveal = this.thePlayer.getNumStars();
+                view.getStarNodes()[starToReveal].setVisible(true);
+                this.thePlayer.incrementNumStars();
+                
+                if (this.thePlayer.getNumStars() > 2) {
+                    view.changeBackground(1);
+                }
+            }
+        } else {
+            view.getProgressBar().setStyle("-fx-accent: #0094C5;");
+            if (PUNISH) {
+                view.getProgressBar().setProgress(view.getProgressBar().getProgress() - .125);
+                if (view.getProgressBar().isIndeterminate()) {
+                    view.getProgressBar().setStyle("-fx-accent: red;");
+                    
+                }
             }
         }
-        
     }
     
     /** If user inputs correct answer play positive feedback sound,
@@ -245,6 +271,8 @@ public class DotsGameController implements GameController {
     /**
      * Prepare the first round by making a load bar to 
      * let the subject prepare for the first question.
+     * 
+     * Also sets up the canvases on which the dots will be painted.
      */
     public void prepareFirstRound() {
         
@@ -263,15 +291,16 @@ public class DotsGameController implements GameController {
             @Override
             public void handle(WorkerStateEvent e) {
                 
-                GraphicsContext gcLeft =
-                        theView.getLeftOption().getGraphicsContext2D();
-                gcLeft.setFill(Color.BISQUE);
-                gcLeft.fillRect(0,0,theView.getLeftOption().getWidth(),theView.getLeftOption().getHeight());
+                gcLeft = theView.getLeftOption().getGraphicsContext2D();
+                gcRight = theView.getRightOption().getGraphicsContext2D();
                 
-                GraphicsContext gcRight =
-                        theView.getRightOption().getGraphicsContext2D();
-                gcRight.setFill(Color.BISQUE);
+                gcLeft.setFill(CANVAS_COLOR);
+                gcLeft.fillRect(0,0,theView.getLeftOption().getWidth(),theView.getLeftOption().getHeight());
+                gcLeft.setFill(DOT_COLOR);
+                
+                gcRight.setFill(CANVAS_COLOR);
                 gcRight.fillRect(0,0,theView.getRightOption().getWidth(),theView.getRightOption().getHeight());
+                gcRight.setFill(DOT_COLOR);
                 
                 setOptions();
                 state = CurrentState.WAITING_FOR_RESPONSE;
@@ -306,8 +335,13 @@ public class DotsGameController implements GameController {
      * Clears the options.
      */
     public void clearRound() {
-//        getTheView().getLeftOption().setText("");
-//        getTheView().getRightOption().setText("");
+        gcLeft.setFill(CANVAS_COLOR);
+        gcLeft.fillRect(0, 0, theView.getLeftOption().getWidth(),theView.getLeftOption().getHeight());
+        gcLeft.setFill(DOT_COLOR);
+        
+        gcRight.setFill(CANVAS_COLOR);
+        gcRight.fillRect(0, 0, theView.getRightOption().getWidth(),theView.getRightOption().getHeight());
+        gcRight.setFill(DOT_COLOR);
     }
 
     /**
@@ -341,19 +375,39 @@ public class DotsGameController implements GameController {
      * Set the next round's choices.
      */
     public void setOptions() {
-        DotSet letterOne, letterTwo;
+        DotSet dotSetOne, dotSetTwo;
         
         dpg.getNewDifficultyPair();
         this.currentDotsPair = dpg.getDotsPair();
         
-        letterOne = this.currentDotsPair.getDotSetOne();
-        letterTwo = this.currentDotsPair.getDotSetTwo();
+        dotSetOne = this.currentDotsPair.getDotSetOne();
+        dotSetTwo = this.currentDotsPair.getDotSetTwo();
         
-//        theView.getLeftOption().setText(String.valueOf(letterOne));
-//        theView.getRightOption().setText(String.valueOf(letterTwo));
+        this.paintDotSet(dotSetOne, gcLeft);
+        this.paintDotSet(dotSetTwo, gcRight);
+//        theView.getLeftOption().setText(String.valueOf(dotSetOne));
+//        theView.getRightOption().setText(String.valueOf(dotSetTwo));
 
     }
     
+    /**
+     * Paint the dots.
+     * @param 
+     */
+    private void paintDotSet(DotSet dotSet, GraphicsContext graphicsContext) {
+        for (int i = 0; i < dotSet.getTotalNumDots(); i++) {
+            System.out.println("FILLING: " + i);
+//            System.out.println(dotSet.getTotalNumDots());
+//            System.out.println(dotSet.getPositions().size());
+            int x = dotSet.getPositions().get(i).x;
+            int y = dotSet.getPositions().get(i).y;
+            graphicsContext.fillOval(x, y, 
+                    dotSet.getDiameters().get(i), 
+                    dotSet.getDiameters().get(i));
+        }
+    }
+   
+
     /** 
      * Record the response time of the subject. 
      */

@@ -27,6 +27,9 @@ import javafx.stage.Stage;
  */
 public class GameGUI {
     
+    /** Whether or not to slowly drain the progress bar as time pressure. */
+    static final boolean PROGRESS_DRAIN = false;
+    
     /** Width of the game window. */
     static final int SCREEN_WIDTH = 800;
     /** Height of the game window. */
@@ -122,7 +125,7 @@ public class GameGUI {
             
             /** Set event handlers for gameplay */
             
-            this.LGC.beginProgressBarDrainage();
+            if (PROGRESS_DRAIN) { this.LGC.beginProgressBarDrainage(); }
             this.LGC.setGameHandlers();
             
         } catch (NumberFormatException e) {

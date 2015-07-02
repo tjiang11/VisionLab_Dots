@@ -1,9 +1,11 @@
 package model;
 
-import javafx.scene.canvas.Canvas;
-
 /** 
  * Object to represent two sets of dots.
+ * 
+ * Classes Related To;
+ *  -DotSet.java
+ *      -DotsPair contains a pair of DotSets.
  * 
  * @author Tony Jiang
  * 6-25-2015
@@ -37,16 +39,6 @@ public class DotsPair {
         } else if (this.difference < 0) {
             this.setLeftCorrect(false);
         }
-    }
-    
-    /**
-     * Converts a number index to its corresponding letter. A is 0, Z is 25.
-     * @param posLetter Index of the letter desired.
-     * @return char of the alphabetical character converted from the number.
-     */
-    private char numToAlpha(int posLetter) {
-        char letter = Character.toChars(posLetter)[0];
-        return letter;
     }
 
     public DotSet getDotSetOne() {

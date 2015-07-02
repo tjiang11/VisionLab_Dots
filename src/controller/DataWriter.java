@@ -171,13 +171,13 @@ public class DataWriter {
     }
     
     private String generateLeftChoiceText() {
-        return String.valueOf(
-                this.dotsPair.getDotSetOne());
+        return Integer.toString(
+                this.dotsPair.getDotSetOne().getPositions().size());
     }
     
     private String generateRightChoiceText() {
-        return String.valueOf(
-                this.dotsPair.getDotSetTwo());
+        return Integer.toString(
+                this.dotsPair.getDotSetTwo().getPositions().size());
     }
     
     private String generateWhichSideCorrectText() {
