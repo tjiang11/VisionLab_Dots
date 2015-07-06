@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Random;
+
 /** 
  * Object to represent two sets of dots.
  * 
@@ -13,6 +15,12 @@ package model;
  */
 public class DotsPair {
             
+    /** TOTAL_AREA_CONTROL true if each dot set in a pair should have the same total area.
+     * If dotSetOne has X dots with average radius Rx nd dotSetTwo has Y dots with average radius Ry,
+     * then Ry = sqrt((X * Rx^2) / Y).
+     */
+    private static final boolean TOTAL_AREA_CONTROL = true;
+    
     /** The first letter. */
     private DotSet dotSetOne;
     
@@ -25,14 +33,35 @@ public class DotsPair {
     /** Whether the left answer is correct or not. */
     private boolean leftCorrect;
     
+    
     /** 
      * Constructor for DotsPair.
-     * @param posDotSetOne The index of the first letter. A is 0, Z is 25.
-     * @param posDotSetTwo The index of the second letter.
+     * @param numDotsOne The number of dots in the first set.
+     * @param numDotsTwo The number of dots in the second set.
      */
     public DotsPair(int numDotsOne, int numDotsTwo) {
-        this.dotSetOne = new DotSet(numDotsOne);
-        this.dotSetTwo = new DotSet(numDotsTwo);
+        
+        if (TOTAL_AREA_CONTROL) {
+            System.out.println("Num dots One: " + numDotsOne);
+            System.out.println("Num dots Two: " + numDotsTwo);
+
+            this.dotSetOne = new DotSet(numDotsOne);
+            this.dotSetTwo = new DotSet(numDotsTwo);
+            
+            double totalAreaOne = this.dotSetOne.getTotalArea();
+            double totalAreaTwo = this.dotSetTwo.getTotalArea();
+            
+            if (totalAreaOne > totalAreaTwo) {
+                dotSetOne.matchArea(totalAreaTwo);        
+            } else {
+                dotSetTwo.matchArea(totalAreaOne);
+            }
+        }
+        else {
+            this.dotSetOne = new DotSet(numDotsOne);
+            this.dotSetTwo = new DotSet(numDotsTwo);
+        }
+        
         this.difference = numDotsOne - numDotsTwo;
         if (this.difference > 0) {
             this.setLeftCorrect(true);
@@ -40,7 +69,7 @@ public class DotsPair {
             this.setLeftCorrect(false);
         }
     }
-
+    
     public DotSet getDotSetOne() {
         return this.dotSetOne;
     }

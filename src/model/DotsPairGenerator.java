@@ -61,7 +61,6 @@ public class DotsPairGenerator implements PairGenerator {
      * Constructor. 
      */
     public DotsPairGenerator() {
-        this.getNewPair();
         this.setSameChoice(0);
         this.setLastWasLeft(false);
         this.setDifficultyMode(EASY_MODE);
@@ -222,15 +221,15 @@ public class DotsPairGenerator implements PairGenerator {
     
     public void setRandomDifficulty() {
         this.difficultyMode = this.randomGenerator.nextInt(NUM_MODES);
-        if (this.difficultyMode == 0) {
-            System.out.println("EASY");
-        } else if (this.difficultyMode == 1) {
-            System.out.println("MEDIUM"); 
-        } else if (this.difficultyMode == 2) {
-            System.out.println("HARD");
-        } else {
-            System.out.println("Uhh..");
-        }
+//        if (this.difficultyMode == 0) {
+//            System.out.println("EASY");
+//        } else if (this.difficultyMode == 1) {
+//            System.out.println("MEDIUM"); 
+//        } else if (this.difficultyMode == 2) {
+//            System.out.println("HARD");
+//        } else {
+//            System.out.println("Uhh..");
+//        }
     }
     
     public void increaseDifficulty() {

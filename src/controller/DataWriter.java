@@ -92,7 +92,6 @@ public class DataWriter {
             /** Create new csv file for subject if doesn't exist */
             File file = new File(path + "\\results\\" + subjectId 
                     + "\\results_" + subjectId + ".csv");            
-            System.out.println(file.getPath());
             String text = "";
             
             /** Write data to new file or append to old file */

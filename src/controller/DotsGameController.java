@@ -57,7 +57,7 @@ public class DotsGameController implements GameController {
     final static int GET_READY_TIME = 2000;
     
     /** Time in milliseconds that the DotSets flash */
-    final static int FLASH_TIME = 200;
+    final static int FLASH_TIME = 500;
     
     /** DataWriter to export data to CSV. */
     private DataWriter dataWriter;
@@ -420,10 +420,7 @@ public class DotsGameController implements GameController {
             
             int x = dotSet.getPositions().get(i).x;
             int y = dotSet.getPositions().get(i).y;
-            System.out.println("painting!");
-     
-            System.out.println("i: " + i);
-            System.out.println(dotSet.getTotalNumDots());
+
             graphicsContext.fillOval(x, y, 
                     dotSet.getDiameters().get(i), 
                     dotSet.getDiameters().get(i));
