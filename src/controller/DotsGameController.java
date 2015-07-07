@@ -2,6 +2,7 @@ package controller;
 
 import java.net.URL;
 
+import config.Config;
 import model.DotSet;
 import model.DotsPair;
 import model.DotsPairGenerator;
@@ -56,8 +57,11 @@ public class DotsGameController implements GameController {
     /** Time in milliseconds for the player to get ready after pressing start */
     final static int GET_READY_TIME = 2000;
     
+    /** Time between rounds in milliseconds. */
+    static int TIME_BETWEEN_ROUNDS;
+    
     /** Time in milliseconds that the DotSets flash */
-    final static int FLASH_TIME = 500;
+    static int FLASH_TIME;
     
     /** DataWriter to export data to CSV. */
     private DataWriter dataWriter;
@@ -95,6 +99,9 @@ public class DotsGameController implements GameController {
      * @param view The graphical user interface.
      */
     public DotsGameController(GameGUI view) {
+        
+        loadConfig();
+        
         this.gameController = this;
         this.dpg = new DotsPairGenerator();
         this.currentDotsPair = null;
@@ -103,6 +110,12 @@ public class DotsGameController implements GameController {
         this.thePlayer = new Player();
         this.dataWriter = new DataWriter(this);
 
+    }
+    
+    private void loadConfig() {
+        new Config();
+        FLASH_TIME = Config.getPropertyInt("flash.time");
+        TIME_BETWEEN_ROUNDS = Config.getPropertyInt("time.between.rounds");
     }
     
     /**
