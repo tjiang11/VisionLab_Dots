@@ -62,8 +62,6 @@ public final class SetUp {
     static final int START_POSITION_X = 380;
     static final int START_POSITION_Y = 280;
     
-    static int testX = 145;
-    static int test = 80;
     /**
      * Game Screen. */
     static final int NUM_STARS = 100;

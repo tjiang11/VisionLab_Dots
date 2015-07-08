@@ -1,6 +1,7 @@
 package view;
 
 import controller.DotsGameController;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -8,7 +9,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -29,6 +32,7 @@ public class GameGUI {
     
     /** Whether or not to slowly drain the progress bar as time pressure. */
     static final boolean PROGRESS_DRAIN = false;
+    
     
     /** Width of the game window. */
     static final int SCREEN_WIDTH = 800;
@@ -101,10 +105,23 @@ public class GameGUI {
         this.enterId.requestFocus();
         
         this.primaryStage.setResizable(false);
-        this.primaryStage.setFullScreen(false);
+        
+
+        
         this.primaryStage.sizeToScene();
         this.primaryStage.setScene(this.scene);
+        
+        
+        this.primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+//        
+//        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+//        this.primaryStage.setX(primaryScreenBounds.getMinX());
+//        this.primaryStage.setY(primaryScreenBounds.getMinY());
+//        this.primaryStage.setWidth(primaryScreenBounds.getWidth());
+//        this.primaryStage.setHeight(primaryScreenBounds.getHeight());
+        
         this.primaryStage.show();  
+//        this.primaryStage.setFullScreen(true);
     }
     
     /**
@@ -118,8 +135,9 @@ public class GameGUI {
                     this, stage, subjectID, lgc);  
             
             this.scene = gameScene;
+            
             this.primaryStage.setScene(this.scene);
-           
+//            this.primaryStage.setFullScreen(true);
             
             this.LGC.prepareFirstRound();
             

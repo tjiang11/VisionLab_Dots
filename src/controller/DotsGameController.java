@@ -112,6 +112,9 @@ public class DotsGameController implements GameController {
 
     }
     
+    /** 
+     * Load configuration settings. 
+     */
     private void loadConfig() {
         new Config();
         FLASH_TIME = Config.getPropertyInt("flash.time");
@@ -337,16 +340,7 @@ public class DotsGameController implements GameController {
         //clearRound();
         waitBeforeNextRoundAndUpdate(TIME_BETWEEN_ROUNDS);
     }
-    
-//    /**
-//     * Increase the difficulty if the number of rounds has reached an integer multiple of ROUNDS_PER_DIFFICULTY.
-//     */
-//    private void setDifficulty() {
-//        if (this.thePlayer.getNumRounds() == (ROUNDS_PER_DIFFICULTY * (this.dpg.getDifficultyMode() + 1))) {
-//            this.dpg.increaseDifficulty();
-//        }
-//    }
-
+  
     /**
      * Clears the options.
      */
