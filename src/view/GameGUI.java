@@ -1,7 +1,6 @@
 package view;
 
 import controller.DotsGameController;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -11,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Screen;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -33,14 +32,8 @@ public class GameGUI {
     /** Whether or not to slowly drain the progress bar as time pressure. */
     static final boolean PROGRESS_DRAIN = false;
     
-    
-    /** Width of the game window. */
-    static final int SCREEN_WIDTH = 800;
-    /** Height of the game window. */
-    static final int SCREEN_HEIGHT = 600;
-    
     /** Controller for setting event handlers */
-    private DotsGameController LGC;
+    private DotsGameController DGC;
 
     /** The JavaFX stage for the game. */
     private Stage primaryStage;
@@ -57,6 +50,8 @@ public class GameGUI {
     /** Login Screen - Text field for user to enter their 
      * Subject ID. */
     private TextField enterId;
+    /** Login Box to contain start button, feedback label, and enterId TextField. */
+    private VBox loginBox;
     
     /** Game Screen - The left choice. */
     private Canvas leftOption;
@@ -68,12 +63,15 @@ public class GameGUI {
     private Label getReady;
     /** Game Screen - Get Ready Bar */
     private ProgressBar getReadyBar;
+    private VBox getReadyBox;
     /** Game Screen - Stars */
     private ImageView starNodes[];
     
     /** End Screen - message informing the user has finished. */
     private Label congratulations;
     
+    private VBox finishMessage;
+
     /** 
      * Constructor for the user interface. Sets the stage
      * and login screen.
@@ -99,29 +97,24 @@ public class GameGUI {
         Scene loginScene = SetUp.setUpLoginScreen(this, this.primaryStage);
         this.scene = loginScene;
         
-        LGC = new DotsGameController(this);
-        LGC.setLoginHandlers();
-
-        this.enterId.requestFocus();
+        DGC = new DotsGameController(this);
+        DGC.setLoginHandlers();
         
         this.primaryStage.setResizable(false);
         
-
-        
         this.primaryStage.sizeToScene();
-        this.primaryStage.setScene(this.scene);
         
+        this.primaryStage.setScene(this.scene);
+
+        this.primaryStage.show(); 
+        
+        System.out.println("Width: " + this.getLoginBox().getHeight());
+        
+        this.getLoginBox().setLayoutY(SetUp.SCREEN_HEIGHT / 2 - this.getLoginBox().getHeight());
+        this.getLoginBox().setLayoutX((SetUp.SCREEN_WIDTH / 2) - (this.getLoginBox().getWidth() / 2));
         
         this.primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-//        
-//        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-//        this.primaryStage.setX(primaryScreenBounds.getMinX());
-//        this.primaryStage.setY(primaryScreenBounds.getMinY());
-//        this.primaryStage.setWidth(primaryScreenBounds.getWidth());
-//        this.primaryStage.setHeight(primaryScreenBounds.getHeight());
-        
-        this.primaryStage.show();  
-//        this.primaryStage.setFullScreen(true);
+        this.primaryStage.setFullScreen(true);
     }
     
     /**
@@ -135,16 +128,22 @@ public class GameGUI {
                     this, stage, subjectID, lgc);  
             
             this.scene = gameScene;
-            
             this.primaryStage.setScene(this.scene);
-//            this.primaryStage.setFullScreen(true);
             
-            this.LGC.prepareFirstRound();
+            System.out.println(this.getReadyBar.getWidth());
+            this.getGetReadyBox().setLayoutY((SetUp.SCREEN_HEIGHT / 2) - this.getGetReadyBox().getHeight());
+            this.getGetReadyBox().setLayoutX((SetUp.SCREEN_WIDTH / 2) - (this.getGetReadyBox().getWidth() / 2));
+            
+            this.getReadyBar.setLayoutX((SetUp.SCREEN_WIDTH / 2) - (this.getReady.getWidth() / 2));
+            
+            this.primaryStage.setFullScreen(true);
+            
+            this.DGC.prepareFirstRound();
             
             /** Set event handlers for gameplay */
             
-            if (PROGRESS_DRAIN) { this.LGC.beginProgressBarDrainage(); }
-            this.LGC.setGameHandlers();
+            if (PROGRESS_DRAIN) { this.DGC.beginProgressBarDrainage(); }
+            this.DGC.setGameHandlers();
             
         } catch (NumberFormatException e) {
             System.out.println("Oops!");
@@ -162,6 +161,11 @@ public class GameGUI {
         Scene finishScene = SetUp.setUpFinishScreen(this, stage, lgc);
         this.scene = finishScene;
         this.primaryStage.setScene(this.scene);
+
+        this.getFinishMessage().setLayoutX((SetUp.SCREEN_WIDTH / 2) - (this.getFinishMessage().getWidth() / 2));
+        this.getFinishMessage().setLayoutY((SetUp.SCREEN_HEIGHT / 2) - this.getFinishMessage().getHeight());
+        
+        this.primaryStage.setFullScreen(true);
     }
     
     /**
@@ -274,6 +278,31 @@ public class GameGUI {
 
     public void setStarNodes(ImageView starNodes[]) {
         this.starNodes = starNodes;
+    }
+
+    public VBox getLoginBox() {
+        return loginBox;
+    }
+
+    public void setLoginBox(VBox loginBox) {
+        this.loginBox = loginBox;
+    }
+
+    public VBox getGetReadyBox() {
+        return getReadyBox;
+    }
+
+    public void setGetReadyBox(VBox getReadyBox) {
+        this.getReadyBox = getReadyBox;
+    }
+    
+    
+    public VBox getFinishMessage() {
+        return finishMessage;
+    }
+
+    public void setFinishMessage(VBox finishMessage) {
+        this.finishMessage = finishMessage;
     }
 
 }

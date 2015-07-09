@@ -30,12 +30,10 @@ public class Config {
         // load the properties from the default config file
         defaultProperties = new Properties();
         InputStream in;
-        try
-        {
+        try {
             in = getClass().getResourceAsStream(DEFAULT_CONFIG_FILE_NAME);
             defaultProperties.load(in);
-        } catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             System.err.println("Default config file "
                     + DEFAULT_CONFIG_FILE_NAME + " not found!!!");
         } catch (IOException e)
@@ -43,14 +41,6 @@ public class Config {
             System.err
                     .println("IOException reading properties from default config file...");
         }
-    }
- 
-    public static Boolean totalAreaControlOn() {
-        return Boolean.valueOf(defaultProperties.getProperty("total.area.control"));
-    }
-    
-    public static Boolean averageRadiusControlOn() {
-        return Boolean.valueOf(defaultProperties.getProperty("average.radius.control"));
     }
     
     public static Boolean getPropertyBoolean(String key) {
