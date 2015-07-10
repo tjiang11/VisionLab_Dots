@@ -19,11 +19,11 @@ public enum CurrentState {
      */
     WAITING_BETWEEN_ROUNDS, 
     
-    /** While the question is being displayed and subject has not yet
+    /** While the question has been hidden and subject has not yet
      * provided feedback.
      */
     WAITING_FOR_RESPONSE,
-    
+
     /** After all trials have been completed. */
     FINISHED,
 }

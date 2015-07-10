@@ -88,6 +88,13 @@ public class DotsGameController implements GameController {
     /** Current state of the game. */
     public static CurrentState state;
     
+    private Object lock = new Object();
+    
+    /** Whether or not the user has provided feedback. This variable is used to support concurrency--Flash time
+     * should not overlap with Time between rounds.
+     */
+    private static boolean feedback_given;
+    
     /** Alternate reference to "this" to be used in inner methods */
     private DotsGameController gameController;
     
@@ -152,13 +159,14 @@ public class DotsGameController implements GameController {
         this.theScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if ((event.getCode() == KeyCode.F 
-                        || event.getCode() == KeyCode.J) 
-                        && state == CurrentState.WAITING_FOR_RESPONSE) {
+                if ((event.getCode() == KeyCode.F || event.getCode() == KeyCode.J) 
+                        && !feedback_given) {
                     
-                    /** Set the state to prevent mass input from holding down
-                     * 'F' or 'J' key. */
-                    state = CurrentState.WAITING_BETWEEN_ROUNDS;
+                    feedback_given = true;
+
+                    if (state == CurrentState.WAITING_FOR_RESPONSE) {
+                        state = CurrentState.WAITING_BETWEEN_ROUNDS;
+                    }
                     
                     /** Update models and view appropriately according to correctness
                      * of subject's response.
@@ -293,7 +301,8 @@ public class DotsGameController implements GameController {
      * Also sets up the canvases on which the dots will be painted.
      */
     public void prepareFirstRound() {
-        
+//        state = null;
+        feedback_given = false;
         Task<Void> sleeper = new Task<Void>() {   
             @Override
             protected Void call() throws Exception {
@@ -321,10 +330,9 @@ public class DotsGameController implements GameController {
                 gcRight.setFill(DOT_COLOR);
                 
                 setOptions();
-                state = CurrentState.WAITING_FOR_RESPONSE;
+
                 responseTimeMetric = System.nanoTime();
-                theView.getGetReady().setText("");
-                theView.getGetReadyBar().setOpacity(0.0);
+                theView.getGetReadyBox().setVisible(false);
             }
         });
         Thread sleeperThread = new Thread(sleeper);
@@ -362,9 +370,16 @@ public class DotsGameController implements GameController {
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                for (int i = 0; i < waitTime; i++) {
-                    this.updateProgress(i, waitTime); 
-                    Thread.sleep(1);
+                int i = 0;
+                while (i < waitTime) {
+                    //Synchronized to disallow the changing of the state.
+                    synchronized (lock) {
+                        if (state == CurrentState.WAITING_BETWEEN_ROUNDS) {
+                            this.updateProgress(i, waitTime); 
+                            Thread.sleep(1);
+                            i++;
+                        }
+                    }
                 }
                 return null;
             }
@@ -373,9 +388,8 @@ public class DotsGameController implements GameController {
             @Override
             public void handle(WorkerStateEvent e) {
                 setOptions();
-                state = CurrentState.WAITING_FOR_RESPONSE;
                 responseTimeMetric = System.nanoTime();
-                getTheView().getGetReady().setText("");
+                state = null;
             }
         });
         Thread sleeperThread = new Thread(sleeper);
@@ -397,11 +411,10 @@ public class DotsGameController implements GameController {
         
         this.paintDotSet(dotSetOne, gcLeft);
         this.paintDotSet(dotSetTwo, gcRight);
-
+        feedback_given = false;
     }
     
-    private void flash() {
-        
+    private void flash() { 
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected java.lang.Void call() throws Exception {
@@ -413,6 +426,11 @@ public class DotsGameController implements GameController {
             @Override
             public void handle(WorkerStateEvent event) {
                 gameController.clearRound();    
+                if (feedback_given) {
+                    DotsGameController.state = CurrentState.WAITING_BETWEEN_ROUNDS;
+                } else {
+                    DotsGameController.state = CurrentState.WAITING_FOR_RESPONSE;
+                }
             }
         });
         new Thread(sleeper).start();
