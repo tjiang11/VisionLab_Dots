@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Random;
+
 import config.Config;
 
 /** 
@@ -27,6 +29,7 @@ public class DotsPair {
     /** Whether the left answer is correct or not. */
     private boolean leftCorrect;
     
+    private Random randomGenerator = new Random();
     
     /** 
      * Constructor for DotsPair.
@@ -42,7 +45,7 @@ public class DotsPair {
         this.dotSetTwo = new DotSet(numDotsTwo);
         
         if (Config.getPropertyBoolean("total.area.control.on")) {
-            this.matchAreas();
+            this.scaleAreas();
         }
         
         this.difference = numDotsOne - numDotsTwo;
@@ -53,7 +56,23 @@ public class DotsPair {
         }
     }
     
-    private void matchAreas() {
+    /**
+     * Scale the total areas of the dots.
+     */
+    private void scaleAreas() {      
+        if (randomGenerator.nextBoolean()) {
+            this.matchAreas(dotSetOne, dotSetTwo);
+        } else {
+            this.inverseMatchAreas(dotSetOne, dotSetTwo);
+        }
+    }
+    
+    /**
+     * Make two dot sets have equal areas by scaling the dot set with greater area down.
+     * @param dotSetOne
+     * @param dotSetTwo
+     */
+    private void matchAreas(DotSet dotSetOne, DotSet dotSetTwo) {
         double totalAreaOne = this.dotSetOne.getTotalArea();
         double totalAreaTwo = this.dotSetTwo.getTotalArea();
         
@@ -61,6 +80,22 @@ public class DotsPair {
             dotSetOne.matchArea(totalAreaTwo);        
         } else {
             dotSetTwo.matchArea(totalAreaOne);
+        }
+    }
+
+    /**
+     * Further scale down the dot set with lesser area.
+     * @param dotSetOne
+     * @param dotSetTwo
+     */
+    private void inverseMatchAreas(DotSet dotSetOne, DotSet dotSetTwo) {
+        double totalAreaOne = dotSetOne.getTotalArea();
+        double totalAreaTwo = dotSetTwo.getTotalArea();
+        
+        if (totalAreaOne > totalAreaTwo) {
+            dotSetTwo.inverseMatchArea(totalAreaOne);
+        } else {
+            dotSetOne.inverseMatchArea(totalAreaTwo);
         }
     }
     

@@ -66,18 +66,7 @@ public final class SetUp {
     static final double STAR_SCALE = .28;
     /** Font size of the letter options. */
     static final int LETTER_SIZE = 100;
-    
-    /**
-     * Finish Screen Element Positions.
-     */
-    /** Position of message congratulating subject on completing
-     * the experiment. */
-    static final int CONGRATS_X = 348;
-    static final int CONGRATS_Y = 270;
-    /** Position of message with subject's score. */
-    static final int SCORE_X = 328;
-    static final int SCORE_Y = 300;
-    
+  
     /** Disable constructing of an object. */
     private SetUp() {
         
@@ -103,7 +92,12 @@ public final class SetUp {
         view.getLoginBox().setAlignment(Pos.CENTER);
         view.getLoginBox().getChildren().addAll(label, view.getEnterId(), view.getStart(), view.getFeedback());
 
-        view.getLayout().getChildren().add(view.getLoginBox());
+//        view.setInstructions(new Button());
+//        Image instructionsImage = new Image("/res/images/" + "instructions.png");
+//        view.getInstructions().setGraphic(new ImageView(instructionsImage));
+//        view.getInstructions().setLayoutX(100);
+        
+        view.getLayout().getChildren().addAll(view.getLoginBox());
         
         Scene scene = new Scene(view.getLayout(), 
                 SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -216,12 +210,6 @@ public final class SetUp {
         view.setCongratulations(new Label("You did it!"));
         view.getCongratulations().setFont(Font.font("Verdana", 20));
         score.setFont(Font.font("Tahoma", 16));
-        
-        view.getCongratulations().setLayoutX(CONGRATS_X);
-        view.getCongratulations().setLayoutY(CONGRATS_Y);
-        
-        score.setLayoutX(SCORE_X);
-        score.setLayoutY(SCORE_Y);
         
         view.setFinishMessage(new VBox(6));
         view.getFinishMessage().getChildren().addAll(view.getCongratulations(), score);

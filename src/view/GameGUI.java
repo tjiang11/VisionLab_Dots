@@ -53,6 +53,9 @@ public class GameGUI {
     /** Login Box to contain start button, feedback label, and enterId TextField. */
     private VBox loginBox;
     
+    /** Login Screen - Instructions Button */
+    private Button instructions;
+    
     /** Game Screen - The left choice. */
     private Canvas leftOption;
     /** Game Screen - The right choice. */
@@ -303,6 +306,14 @@ public class GameGUI {
 
     public void setFinishMessage(VBox finishMessage) {
         this.finishMessage = finishMessage;
+    }
+
+    public Button getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(Button instructions) {
+        this.instructions = instructions;
     }
 
 }

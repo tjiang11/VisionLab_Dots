@@ -213,7 +213,7 @@ public class DotSet {
      * Given a dot set X with N dots, dot set Y with M dots, then we need to multiply each diameter in dotSet X
      * by the square root of the ratio of Total Area Y / Total Area X.
      * 
-     * Note: Should always scale down to avoid overlapping of dots.
+     * Note: Should always scale down to avoid overlapping of dots. (otherTotalArea < this.getTotalArea())
      * 
      * @param otherTotalArea The area of the other dotSet to be matched.
      */
@@ -225,6 +225,25 @@ public class DotSet {
         for (int diameterIndex = 0; diameterIndex < this.totalNumDots; diameterIndex++) {
             double diameterToScale = this.diameters.get(diameterIndex);
             double scaledDiameter = diameterToScale * resizeRatio;
+            this.diameters.set(diameterIndex, scaledDiameter);
+        }
+    }
+     
+    /**
+     * Takes the area of this dot set X (with less area than other dot set Y) and further scales it area down by the factor
+     * that other dot set Y would have had to scale down to match this dot set X. Opposite of matchArea().
+     * 
+     * (otherTotalArea > this.getTotalArea())
+     * 
+     * @param otherTotalArea
+     */
+    public void inverseMatchArea(double otherTotalArea) {
+        
+        double inverseResizeRatio = Math.sqrt(this.getTotalArea() / otherTotalArea);
+        
+        for (int diameterIndex = 0; diameterIndex < this.totalNumDots; diameterIndex++) {
+            double diameterToScale = this.diameters.get(diameterIndex);
+            double scaledDiameter = diameterToScale * inverseResizeRatio;
             this.diameters.set(diameterIndex, scaledDiameter);
         }
     }
