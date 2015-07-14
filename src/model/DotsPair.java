@@ -29,7 +29,20 @@ public class DotsPair {
     /** Whether the left answer is correct or not. */
     private boolean leftCorrect;
     
-    private boolean areaControlOn;
+    /** The control type of this pair */
+    private ControlType controlType;
+    
+    public enum ControlType {
+        EQUAL_AREAS,
+        INVERSE_AREAS,
+        RADIUS_AVERAGE_EQUAL,
+        NONE
+    }
+    
+    private static boolean TOTAL_AREA_CONTROL_ON;
+    private static boolean EQUAL_AREAS_ONLY;
+    private static boolean INVERSE_AREAS_ONLY;
+    private static boolean AVERAGE_RADIUS_CONTROL;
     
     private Random randomGenerator = new Random();
     
@@ -39,14 +52,16 @@ public class DotsPair {
      * @param numDotsTwo The number of dots in the second set.
      */
     public DotsPair(int numDotsOne, int numDotsTwo) {
-        new Config();
+        loadConfig();
         System.out.println("Num dots One: " + numDotsOne);
         System.out.println("Num dots Two: " + numDotsTwo);
 
         this.dotSetOne = new DotSet(numDotsOne);
         this.dotSetTwo = new DotSet(numDotsTwo);
         
-        if (Config.getPropertyBoolean("total.area.control.on")) {
+        this.defineControlType();
+        
+        if (TOTAL_AREA_CONTROL_ON) {
             this.scaleAreas();
         }
         
@@ -58,16 +73,45 @@ public class DotsPair {
         }
     }
     
+    private void loadConfig() {
+        new Config();
+        
+        TOTAL_AREA_CONTROL_ON = Config.getPropertyBoolean("total.area.control.on");
+        EQUAL_AREAS_ONLY = Config.getPropertyBoolean("equal.areas.only");
+        INVERSE_AREAS_ONLY = Config.getPropertyBoolean("inverse.areas.only");
+        AVERAGE_RADIUS_CONTROL = Config.getPropertyBoolean("average.radius.control");
+    }
+    
     /**
-     * Scale the total areas of the dots.
+     * Scale the total areas of the dots based on configuration.
      */
-    private void scaleAreas() {      
+    private void scaleAreas() {
+        if (EQUAL_AREAS_ONLY) {
+            this.matchAreas(dotSetOne, dotSetTwo);
+            return;
+        }
+        if (INVERSE_AREAS_ONLY) {
+            this.inverseMatchAreas(dotSetOne, dotSetTwo);
+            return;
+        }
         if (randomGenerator.nextBoolean()) {
             this.matchAreas(dotSetOne, dotSetTwo);
-            setAreaControlOn(true);
+            this.controlType = ControlType.EQUAL_AREAS;
         } else {
             this.inverseMatchAreas(dotSetOne, dotSetTwo);
-            setAreaControlOn(false);
+            this.controlType = ControlType.INVERSE_AREAS;
+        }
+    }
+    
+    private void defineControlType() {
+        if (AVERAGE_RADIUS_CONTROL) {
+            this.controlType = ControlType.RADIUS_AVERAGE_EQUAL;
+        } else if (EQUAL_AREAS_ONLY) {
+            this.controlType = ControlType.EQUAL_AREAS;
+        } else if (INVERSE_AREAS_ONLY) {
+            this.controlType = ControlType.INVERSE_AREAS;
+        } else {
+            this.controlType = ControlType.NONE;
         }
     }
     
@@ -137,12 +181,11 @@ public class DotsPair {
         this.leftCorrect = leftCorrect;
     }
 
-    public boolean isAreaControlOn() {
-        return areaControlOn;
+    public ControlType getControlType() {
+        return controlType;
     }
 
-    public void setAreaControlOn(boolean areaControlOn) {
-        this.areaControlOn = areaControlOn;
+    public void setControlType(ControlType controlType) {
+        this.controlType = controlType;
     }
-    
 }

@@ -231,11 +231,16 @@ public class DataWriter {
     }
     
     private String generateControlTypeText() {
-        if (this.dotsPair.isAreaControlOn()) {
-            return "Total Area Equal";
-        } else {
+        if (this.dotsPair.getControlType() == DotsPair.ControlType.EQUAL_AREAS) {
+            return "Equal Areas";
+        } else if (this.dotsPair.getControlType() == DotsPair.ControlType.INVERSE_AREAS) {
             return "Inverse Areas";
+        } else if (this.dotsPair.getControlType() == DotsPair.ControlType.RADIUS_AVERAGE_EQUAL) {
+            return "Equal Average Radii";
+        } else if (this.dotsPair.getControlType() == DotsPair.ControlType.NONE) {
+            return "None";
         }
+        return "---";
     }
     
     private String generateResponseTimeText() {
