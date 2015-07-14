@@ -29,6 +29,8 @@ public class DotsPair {
     /** Whether the left answer is correct or not. */
     private boolean leftCorrect;
     
+    private boolean areaControlOn;
+    
     private Random randomGenerator = new Random();
     
     /** 
@@ -62,8 +64,10 @@ public class DotsPair {
     private void scaleAreas() {      
         if (randomGenerator.nextBoolean()) {
             this.matchAreas(dotSetOne, dotSetTwo);
+            setAreaControlOn(true);
         } else {
             this.inverseMatchAreas(dotSetOne, dotSetTwo);
+            setAreaControlOn(false);
         }
     }
     
@@ -131,6 +135,14 @@ public class DotsPair {
 
     public void setLeftCorrect(boolean leftCorrect) {
         this.leftCorrect = leftCorrect;
+    }
+
+    public boolean isAreaControlOn() {
+        return areaControlOn;
+    }
+
+    public void setAreaControlOn(boolean areaControlOn) {
+        this.areaControlOn = areaControlOn;
     }
     
 }

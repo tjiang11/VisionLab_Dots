@@ -33,6 +33,7 @@ public class DataWriter {
     public static final String IS_CORRECT = "Correct";
     public static final String DIFFICULTY = "Difficulty";
     public static final String DISTANCE = "Distance";
+    public static final String CONTROL_TYPE = "Control Type";
     public static final String RESPONSE_TIME = "Response Time";
     public static final String DATE_TIME = "Date/Time";
     public static final String CONSECUTIVE_ROUND = "Consecutive Rounds";
@@ -44,7 +45,7 @@ public class DataWriter {
     
     /**
      * Constructor for data writer that takes in a controller
-     * and grabs the player and alpha pair.
+     * and grabs the player and dots pair.
      * @param dgc Controller to grab data from
      */
     public DataWriter(DotsGameController dgc) {
@@ -53,7 +54,7 @@ public class DataWriter {
     }
     
     /**
-     * Regrab the current subject and alphapair from the controller.
+     * Regrab the current subject and dots pair from the controller.
      * @param dgc Controller to grab data from
      */
     public void grabData(DotsGameController dgc) {
@@ -122,6 +123,7 @@ public class DataWriter {
                 + IS_CORRECT + DELIMITER
                 + DIFFICULTY + DELIMITER
                 + DISTANCE + DELIMITER
+                + CONTROL_TYPE + DELIMITER
                 + RESPONSE_TIME + DELIMITER
                 + DATE_TIME + DELIMITER
                 + CONSECUTIVE_ROUND + "\n";
@@ -141,6 +143,7 @@ public class DataWriter {
         String correct = this.generateCorrectText();
         String difficulty = this.generateDifficultyText();
         String distance = this.generateDistanceText();
+        String controlType = this.generateControlTypeText();
         String responseTime = this.generateResponseTimeText();
         String dateTime = this.generateDateTimeText();
         String consecutiveRounds = this.generateConsecutiveRoundsText();
@@ -153,6 +156,7 @@ public class DataWriter {
                 + correct + DELIMITER
                 + difficulty + DELIMITER
                 + distance + DELIMITER
+                + controlType + DELIMITER
                 + responseTime + DELIMITER
                 + dateTime + DELIMITER
                 + consecutiveRounds + "\n";
@@ -224,6 +228,14 @@ public class DataWriter {
     private String generateDistanceText() {
         return Integer.toString(Math.abs(
                     this.dotsPair.getDifference()));
+    }
+    
+    private String generateControlTypeText() {
+        if (this.dotsPair.isAreaControlOn()) {
+            return "Total Area Equal";
+        } else {
+            return "Inverse Areas";
+        }
     }
     
     private String generateResponseTimeText() {
