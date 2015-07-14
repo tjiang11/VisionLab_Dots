@@ -27,12 +27,12 @@ public class DotsPairGenerator implements PairGenerator {
     static final int NUM_MODES = 3;
     
     /** Define the lowest distance (in number of letters) each difficulty can have. */
-    static final int EASY_MODE_MIN = 14;
-    static final int MEDIUM_MODE_MIN = 8;
-    static final int HARD_MODE_MIN = 2;
+    public static final int EASY_MODE_MIN = 14;
+    public static final int MEDIUM_MODE_MIN = 8;
+    public static final int HARD_MODE_MIN = 2;
     
     /** The highest distance each difficulty can have is their minimum plus NUM_CHOICES_IN_MODE. */
-    static final int NUM_CHOICES_IN_MODE = 4;
+    public static final int NUM_CHOICES_IN_MODE = 4;
     
     /**
      * Number of triplets of modes per set. See fillDifficultySet().
@@ -63,7 +63,6 @@ public class DotsPairGenerator implements PairGenerator {
     public DotsPairGenerator() {
         this.setSameChoice(0);
         this.setLastWasLeft(false);
-        this.setDifficultyMode(EASY_MODE);
         this.difficultySet = new ArrayList<Integer>();
         this.fillDifficultySet();
     }
@@ -75,6 +74,7 @@ public class DotsPairGenerator implements PairGenerator {
      * as being correct.
      */
     public void getNewPair() {
+        this.setDifficulty();
         System.out.println(this.getSameChoice());
         int dotSetOne, dotSetTwo;
         dotSetOne = this.randomGenerator.nextInt(MAX_DOTS) + 1;
@@ -118,6 +118,7 @@ public class DotsPairGenerator implements PairGenerator {
      * Get a new pair based on the current difficulty.
      */
     public void getNewDifficultyPair() {
+        this.setDifficulty();
         int difference = 0;
         if (this.getDifficultyMode() == EASY_MODE) {
             difference = this.randomGenerator.nextInt(NUM_CHOICES_IN_MODE) + EASY_MODE_MIN;
@@ -138,9 +139,7 @@ public class DotsPairGenerator implements PairGenerator {
         dotSetOne = this.randomGenerator.nextInt(MAX_DOTS - difference) + 1;
         dotSetTwo = dotSetOne + difference;
         
-        //Swap the order
-        int x = this.randomGenerator.nextInt(2);
-        if (x == 1) {
+        if (randomGenerator.nextBoolean()) {
             int temp = dotSetTwo;
             dotSetTwo = dotSetOne;
             dotSetOne = temp;
@@ -221,15 +220,6 @@ public class DotsPairGenerator implements PairGenerator {
     
     public void setRandomDifficulty() {
         this.difficultyMode = this.randomGenerator.nextInt(NUM_MODES);
-//        if (this.difficultyMode == 0) {
-//            System.out.println("EASY");
-//        } else if (this.difficultyMode == 1) {
-//            System.out.println("MEDIUM"); 
-//        } else if (this.difficultyMode == 2) {
-//            System.out.println("HARD");
-//        } else {
-//            System.out.println("Uhh..");
-//        }
     }
     
     public void increaseDifficulty() {

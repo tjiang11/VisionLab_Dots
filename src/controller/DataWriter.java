@@ -41,8 +41,6 @@ public class DataWriter {
     private Player player;
     /** DotsPair to grab data from. */
     private DotsPair dotsPair;
-    /** DotsPairGenerator to grab data from */
-    private DotsPairGenerator dotsPairGenerator;
     
     /**
      * Constructor for data writer that takes in a controller
@@ -52,7 +50,6 @@ public class DataWriter {
     public DataWriter(DotsGameController dgc) {
         this.player = dgc.getThePlayer();
         this.dotsPair = dgc.getCurrentDotsPair();
-        this.dotsPairGenerator = dgc.getApg();
     }
     
     /**
@@ -62,7 +59,6 @@ public class DataWriter {
     public void grabData(DotsGameController dgc) {
         this.player = dgc.getThePlayer();
         this.dotsPair = dgc.getCurrentDotsPair();
-        this.dotsPairGenerator = dgc.getApg();
     }
     
     /**
@@ -208,12 +204,18 @@ public class DataWriter {
     }
     
     private String generateDifficultyText() {
-        int difficulty = this.dotsPairGenerator.getDifficultyMode();
-        if (difficulty == 0) {
+        int difference = Math.abs(this.dotsPair.getDifference());
+        if (difference >= DotsPairGenerator.EASY_MODE_MIN &&
+                difference < DotsPairGenerator.EASY_MODE_MIN 
+                + DotsPairGenerator.NUM_CHOICES_IN_MODE) {
             return "EASY";
-        } else if (difficulty == 1) {
+        } else if (difference >= DotsPairGenerator.MEDIUM_MODE_MIN &&
+                difference < DotsPairGenerator.MEDIUM_MODE_MIN
+                + DotsPairGenerator.NUM_CHOICES_IN_MODE) {
             return "MEDIUM";
-        } else if (difficulty == 2) {
+        } else if (difference >= DotsPairGenerator.HARD_MODE_MIN &&
+                difference < DotsPairGenerator.HARD_MODE_MIN 
+                + DotsPairGenerator.NUM_CHOICES_IN_MODE) {
             return "HARD";
         } 
         return "";

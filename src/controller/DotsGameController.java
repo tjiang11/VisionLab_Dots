@@ -178,9 +178,9 @@ public class DotsGameController implements GameController {
                     
                     /** Export data to CSV file in folder 'results/<subject_id>' */
                     dataWriter.writeToCSV();
-                    
-                    /** Set difficulty of DotsPairGenerator */
-                    gameController.dpg.setDifficulty();       
+//                    
+//                    /** Set difficulty of DotsPairGenerator */
+//                    gameController.dpg.setDifficulty();       
                 }
                 /**
                  * If subject has completed the total number of rounds specified,
@@ -214,9 +214,7 @@ public class DotsGameController implements GameController {
         correct = GameLogic.checkAnswerCorrect(e, dotsPair);
         
         this.updateProgressBar(view, correct);
-        
         this.updatePlayer(currentPlayer, correct);   
-        
         this.feedbackSound(feedbackSoundFileUrl, correct); 
         
         this.dataWriter.grabData(this);
