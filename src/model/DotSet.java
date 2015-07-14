@@ -23,9 +23,9 @@ public class DotSet {
     /** AVERAGE_RADIUS_CONTROL true if each dotset should have the same average radius. */
     /** If TOTAL_AREA_CONTROL is true in DotsPair, then the average radius control property will not hold. */
     static boolean AVERAGE_RADIUS_CONTROL;
-    /** The average diameter for each dot set */
+    /** The average diameter for each dot set with average radius control on */
     static int AVERAGE_DIAMETER_ARC;
-    /** The maximum variance in diameter for each dot set */
+    /** The maximum variance in diameter for each dot set with average radius control on */
     static int MAX_DIAMETER_VARIANCE_ARC;
 
     /** Properties without radius control on;
