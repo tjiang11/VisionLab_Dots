@@ -13,10 +13,13 @@ import java.util.Random;
  * 6-25-2015
  *
  */
-public class DotsPairGenerator implements PairGenerator {
+public class DotsPairGenerator {
     
     /** Number of characters to choose from. */
     static final int MAX_DOTS = 26;
+    
+    /** Max number of times the same side may be the correct choice. */
+    static final int MAX_TIMES_SAME_ANSWER = 3;
     
     /** Map from each difficulty mode to an integer representation. */
     static final int EASY_MODE = 0;
