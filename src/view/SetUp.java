@@ -20,6 +20,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Screen;
@@ -112,6 +113,41 @@ public final class SetUp {
     }
     
     /**
+     * Sets up the elements of the instructions screen.
+     * @param gameGUI GameGUI
+     * @param primaryStage stage
+     * @return Scene the instructions scene
+     */
+    public static Scene setUpInstructionsScreen(GameGUI gameGUI,
+            Stage primaryStage) {
+        
+        AnchorPane layout = new AnchorPane();
+        
+        Text instructionsText = new Text();
+        instructionsText.setText("In this assessment, you will be shown pairs of letters. "
+                + "For each pair, decide which one comes later in the alphabet. "
+                + "Press the 'F' key if you think the left letter comes later, "
+                + "and press the 'J' key if you think the right letter comes later. "
+                + "There is no time limit. Click Next to try a practice question.");
+        instructionsText.setFont(new Font("Century Gothic", 55));
+        instructionsText.setLayoutX(SCREEN_WIDTH * .1);
+        instructionsText.setLayoutY(SCREEN_HEIGHT * .15);
+        instructionsText.setWrappingWidth(SCREEN_WIDTH * .8);
+        
+        gameGUI.setNext(new Button("Next"));
+        gameGUI.getNext().setLayoutX(SCREEN_WIDTH / 2); 
+        gameGUI.getNext().setLayoutY(SCREEN_HEIGHT * .83);
+        gameGUI.getNext().setFont(new Font("Tahoma", 20));
+        gameGUI.getNext().setPrefHeight(SCREEN_HEIGHT * .06);
+        gameGUI.getNext().setPrefWidth(SCREEN_WIDTH * .06);
+        
+        layout.getChildren().addAll(instructionsText, gameGUI.getNext());
+        setBackground(layout, 0);
+        Scene scene = new Scene(layout, SCREEN_WIDTH, SCREEN_HEIGHT);
+        return scene;
+    }
+    
+    /**
      * Set up the game screen where subject will undergo trials.
      * @param view The graphical user interface.
      * @param primaryStage The stage.
@@ -119,11 +155,10 @@ public final class SetUp {
      * @return The game scene.
      */
     public static Scene setUpGameScreen(GameGUI view, 
-            Stage primaryStage, String subjectID, DotsGameController dgc) {
+            Stage primaryStage) {
         
         view.setLayout(new AnchorPane());
-        dgc.getThePlayer().setSubjectID(Integer.parseInt(subjectID));
-        System.out.println(dgc.getThePlayer().getSubjectID());
+        
         setUpOptions(view);
         initialButtonSetUp(view);
         

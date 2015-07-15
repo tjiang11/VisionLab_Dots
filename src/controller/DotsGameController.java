@@ -132,20 +132,46 @@ public class DotsGameController implements GameController {
      * Sets event listener for when subject clicks the start button OR presses Enter.
      * Pass in the subject's ID number entered.
      */
+    /**
+     * Sets event listener for when subject clicks the start button OR presses Enter.
+     * Pass in the subject's ID number entered.
+     */
     public void setLoginHandlers() {
         
         this.theScene = theView.getScene();
         
-        this.theView.getStart().setOnAction(e -> theView.setGameScreen(theView.getEnterId().getText(), this));
-
+        this.theView.getStart().setOnAction(e -> 
+            {
+                onClickStartButton();
+            });
         this.theScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER) {
-                    theView.setGameScreen(
-                            theView.getEnterId().getText(), gameController);
+                if (event.getCode() == KeyCode.ENTER) {                
+                    onClickStartButton();
                 }
             }
+        });
+    }
+    
+    /**
+     * Action to be executed upon clicking of Start on Login screen.
+     */
+    private void onClickStartButton() {
+        try {
+            gameController.thePlayer.setSubjectID(Integer.parseInt(theView.getEnterId().getText()));
+            theView.setInstructionsScreen(); 
+        } catch (NumberFormatException ex) {
+            theView.getEnterId().setText("");
+            theView.getEnterId().requestFocus();
+            theView.getFeedback().setText("That's not your ID, silly!");
+        }
+    }
+    
+    /** Set event listener on the Next button and record the user's subject ID */
+    public void setInstructionsHandlers() {
+        this.theView.getNext().setOnAction(e -> {
+            theView.setGameScreen(); 
         });
     }
     
