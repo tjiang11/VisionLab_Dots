@@ -127,7 +127,7 @@ public class GameGUI {
         Scene instructionsScene = SetUp.setUpInstructionsScreen(this, this.primaryStage);
         this.primaryStage.setScene(instructionsScene);
         this.primaryStage.setFullScreen(true);
-        this.getNext().setLayoutX(getNext().getLayoutX() - this.getNext().getWidth() / 2);
+        this.getNext().setLayoutX(this.getNext().getLayoutX() - this.getNext().getWidth() / 2);
         this.DGC.setInstructionsHandlers();
     }
     
@@ -153,8 +153,6 @@ public class GameGUI {
             this.primaryStage.setFullScreen(true);
             
             this.DGC.prepareFirstRound();
-            
-            /** Set event handlers for gameplay */
             
             if (PROGRESS_DRAIN) { this.DGC.beginProgressBarDrainage(); }
             this.DGC.setGameHandlers();

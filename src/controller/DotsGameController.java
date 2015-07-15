@@ -506,14 +506,6 @@ public class DotsGameController implements GameController {
         drainer.setCycleCount(Animation.INDEFINITE);
         drainer.play();
     }
-    
-    /**
-     * Reorients the Controller to the current scene and reorients the DataWriter to current data (Player and DotsPair)
-     * @param theView The graphical user interface.
-     */
-    public void grabSetting(GameGUI theView) {
-        this.theScene = theView.getScene();
-    }
 
     public Player getThePlayer() {
         return thePlayer;
