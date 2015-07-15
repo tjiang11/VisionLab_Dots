@@ -136,15 +136,14 @@ public class DotsGameController implements GameController {
         
         this.theScene = theView.getScene();
         
-        this.theView.getStart().setOnAction(e -> theView.setGameScreen(
-                theView.getPrimaryStage(), theView.getEnterId().getText(), this));
+        this.theView.getStart().setOnAction(e -> theView.setGameScreen(theView.getEnterId().getText(), this));
 
         this.theScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER) {
                     theView.setGameScreen(
-                            theView.getPrimaryStage(), theView.getEnterId().getText(), gameController);
+                            theView.getEnterId().getText(), gameController);
                 }
             }
         });
@@ -177,10 +176,7 @@ public class DotsGameController implements GameController {
                     gameController.prepareNextRound(); 
                     
                     /** Export data to CSV file in folder 'results/<subject_id>' */
-                    dataWriter.writeToCSV();
-//                    
-//                    /** Set difficulty of DotsPairGenerator */
-//                    gameController.dpg.setDifficulty();       
+                    dataWriter.writeToCSV();     
                 }
                 /**
                  * If subject has completed the total number of rounds specified,
@@ -189,7 +185,7 @@ public class DotsGameController implements GameController {
                 if (thePlayer.getNumRounds() >= NUM_ROUNDS) {
                     state = CurrentState.FINISHED;
                     System.out.println("Done");
-                    theView.setFinishScreen(theView.getPrimaryStage(), gameController);
+                    theView.setFinishScreen(gameController);
                 }
             }
         });

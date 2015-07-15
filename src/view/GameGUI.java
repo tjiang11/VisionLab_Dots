@@ -53,9 +53,6 @@ public class GameGUI {
     /** Login Box to contain start button, feedback label, and enterId TextField. */
     private VBox loginBox;
     
-    /** Login Screen - Instructions Button */
-    private Button instructions;
-    
     /** Game Screen - The left choice. */
     private Canvas leftOption;
     /** Game Screen - The right choice. */
@@ -85,7 +82,7 @@ public class GameGUI {
         
         this.setPrimaryStage(stage);
         
-        this.setLoginScreen(stage);
+        this.setLoginScreen();
     }
     
     /**
@@ -93,7 +90,7 @@ public class GameGUI {
      * @param stage The user interface stage.
      * @throws IOException
      */
-    private void setLoginScreen(Stage stage) {
+    private void setLoginScreen() {
         this.primaryStage.setTitle("Game");
         this.enterId = new TextField();
         
@@ -120,15 +117,19 @@ public class GameGUI {
         this.primaryStage.setFullScreen(true);
     }
     
+    public void setInstructionsScreen(Stage stage) {
+        
+    }
+    
     /**
      * Sets the game screen where subject will be presented with two letters.
      * @param stage The user interface stage.
      * @param subjectID The subject's ID number.
      */
-    public void setGameScreen(Stage stage, String subjectID, DotsGameController lgc) {
+    public void setGameScreen(String subjectID, DotsGameController lgc) {
         try {
             Scene gameScene = SetUp.setUpGameScreen(
-                    this, stage, subjectID, lgc);  
+                    this, this.primaryStage, subjectID, lgc);  
             
             this.scene = gameScene;
             this.primaryStage.setScene(this.scene);
@@ -160,8 +161,8 @@ public class GameGUI {
      * Sets the ending screen informing the subject of their completion.
      * @param stage The user interface stage.
      */
-    public void setFinishScreen(Stage stage, DotsGameController lgc) {
-        Scene finishScene = SetUp.setUpFinishScreen(this, stage, lgc);
+    public void setFinishScreen(DotsGameController lgc) {
+        Scene finishScene = SetUp.setUpFinishScreen(this, this.primaryStage, lgc);
         this.scene = finishScene;
         this.primaryStage.setScene(this.scene);
 
@@ -307,13 +308,4 @@ public class GameGUI {
     public void setFinishMessage(VBox finishMessage) {
         this.finishMessage = finishMessage;
     }
-
-    public Button getInstructions() {
-        return instructions;
-    }
-
-    public void setInstructions(Button instructions) {
-        this.instructions = instructions;
-    }
-
 }
