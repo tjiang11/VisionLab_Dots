@@ -3,6 +3,7 @@ package view;
 import controller.DotsGameController;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -149,7 +150,9 @@ public final class SetUp {
         
         view.getLayout().getChildren().addAll(view.getGetReadyBox(), view.getProgressBar(), view.getLeftOption(), view.getRightOption());
         setBackground(view.getLayout(), 0);
-        return new Scene(view.getLayout(), SCREEN_WIDTH, SCREEN_HEIGHT);
+        Scene scene = new Scene(view.getLayout(), SCREEN_WIDTH, SCREEN_HEIGHT);
+        scene.setCursor(Cursor.NONE);
+        return scene;
     }
     
     private static void setStars(GameGUI view, AnchorPane layout) {
