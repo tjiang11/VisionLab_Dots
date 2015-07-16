@@ -90,7 +90,7 @@ public class DataWriter {
             File file = new File(path + "\\results\\" + subjectId 
                     + "\\results_" + subjectId + ".csv");            
             String text = "";
-            
+            System.out.println(file.getPath());
             /** Write data to new file or append to old file */
             if (file.createNewFile()) {
                 text += this.generateColumnNames();

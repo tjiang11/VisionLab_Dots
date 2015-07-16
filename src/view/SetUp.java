@@ -124,10 +124,10 @@ public final class SetUp {
         AnchorPane layout = new AnchorPane();
         
         Text instructionsText = new Text();
-        instructionsText.setText("In this assessment, you will be shown pairs of letters. "
-                + "For each pair, decide which one comes later in the alphabet. "
-                + "Press the 'F' key if you think the left letter comes later, "
-                + "and press the 'J' key if you think the right letter comes later. "
+        instructionsText.setText("In this assessment, for each question you will be shown two clusters of dots. "
+                + "Decide which cluster contains the greater number of dots. "
+                + "Press the 'F' key if you think the left side has more dots, "
+                + "and press the 'J' key if you think the right side has more dots. "
                 + "There is no time limit. Click Next to try a practice question.");
         instructionsText.setFont(new Font("Century Gothic", 55));
         instructionsText.setLayoutX(SCREEN_WIDTH * .1);

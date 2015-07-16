@@ -90,9 +90,7 @@ public class DotsGameController implements GameController {
     
     private Object lock = new Object();
     
-    /** Whether or not the user has provided feedback. This variable is used to support concurrency--Flash time
-     * should not overlap with Time between rounds.
-     */
+    /** Whether or not the user has provided feedback. */
     private static boolean feedback_given;
     
     /** Alternate reference to "this" to be used in inner methods */
@@ -116,7 +114,6 @@ public class DotsGameController implements GameController {
         this.theScene = view.getScene();
         this.thePlayer = new Player();
         this.dataWriter = new DataWriter(this);
-
     }
     
     /** 
@@ -129,11 +126,7 @@ public class DotsGameController implements GameController {
     }
     
     /**
-     * Sets event listener for when subject clicks the start button OR presses Enter.
-     * Pass in the subject's ID number entered.
-     */
-    /**
-     * Sets event listener for when subject clicks the start button OR presses Enter.
+     * Sets event listener for when subject clicks the start button or presses Enter.
      * Pass in the subject's ID number entered.
      */
     public void setLoginHandlers() {
@@ -155,7 +148,8 @@ public class DotsGameController implements GameController {
     }
     
     /**
-     * Action to be executed upon clicking of Start on Login screen.
+     * Action to be executed upon clicking of Start on Login screen. 
+     * Store the subject's ID and catch exception if integer not entered.
      */
     private void onClickStartButton() {
         try {
@@ -168,7 +162,9 @@ public class DotsGameController implements GameController {
         }
     }
     
-    /** Set event listener on the Next button and record the user's subject ID */
+    /** 
+     * Set event listener on the Next button and record the user's subject ID 
+     */
     public void setInstructionsHandlers() {
         this.theView.getNext().setOnAction(e -> {
             theView.setGameScreen(); 
@@ -204,26 +200,15 @@ public class DotsGameController implements GameController {
                     /** Export data to CSV file in folder 'results/<subject_id>' */
                     dataWriter.writeToCSV();     
                 }
-                /**
-                 * If subject has completed the total number of rounds specified,
-                 * then change the scene to the finish screen.
-                 */
-                if (thePlayer.getNumRounds() >= NUM_ROUNDS) {
-                    state = CurrentState.FINISHED;
-                    System.out.println("Done");
-                    theView.setFinishScreen(gameController);
-                }
             }
         });
     }  
     
     /**
      * Update models and view appropriately according to correctness
-     * of subject's response.  
+     * of subject's response.
      * @param e The key event to check which key the user pressed.
-     * @param dotsPair The current DotsPair being evaluated.
-     * @param currentPlayer The subject.
-     * @param pb the ProgressBar to update.
+     * @param view the graphical user interface. 
      * @return True if the player is correct. False otherwise.
      */
     public void responseAndUpdate (
@@ -235,9 +220,9 @@ public class DotsGameController implements GameController {
         
         correct = GameLogic.checkAnswerCorrect(e, dotsPair);
         
-        this.updateProgressBar(view, correct);
-        this.updatePlayer(currentPlayer, correct);   
-        this.feedbackSound(feedbackSoundFileUrl, correct); 
+        this.updateProgressBar(view, correct); 
+        this.updatePlayer(currentPlayer, correct); 
+        this.feedbackSound(feedbackSoundFileUrl, correct);  
         
         this.dataWriter.grabData(this);
     }
@@ -321,7 +306,6 @@ public class DotsGameController implements GameController {
      * Also sets up the canvases on which the dots will be painted.
      */
     public void prepareFirstRound() {
-//        state = null;
         feedback_given = false;
         Task<Void> sleeper = new Task<Void>() {   
             @Override
@@ -361,12 +345,24 @@ public class DotsGameController implements GameController {
     
     /**
      * Prepares the next round by recording reponse time,
-     * clearing the previous round, waiting, and creating the next round.
+     * waiting, and creating the next round.
      */
     public void prepareNextRound() {
         recordResponseTime();
-        //clearRound();
         waitBeforeNextRoundAndUpdate(TIME_BETWEEN_ROUNDS);
+        
+        if (thePlayer.getNumRounds() >= NUM_ROUNDS) {
+            this.finishGame();
+        }
+    }
+    
+    /**
+     * If subject has completed the total number of rounds specified,
+     * then change the scene to the finish screen.
+     */
+    private void finishGame() {
+        state = CurrentState.FINISHED;
+        theView.setFinishScreen(gameController);
     }
   
     /**
@@ -392,7 +388,6 @@ public class DotsGameController implements GameController {
             protected Void call() throws Exception {
                 int i = 0;
                 while (i < waitTime) {
-                    //Synchronized to disallow the changing of the state.
                     synchronized (lock) {
                         if (state == CurrentState.WAITING_BETWEEN_ROUNDS) {
                             this.updateProgress(i, waitTime); 
