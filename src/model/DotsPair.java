@@ -39,33 +39,6 @@ public class DotsPair {
     
     private Random randomGenerator = new Random();
     
-//    /** 
-//     * Constructor for DotsPair.
-//     * @param numDotsOne The number of dots in the first set.
-//     * @param numDotsTwo The number of dots in the second set.
-//     */
-//    public DotsPair(int numDotsOne, int numDotsTwo) {
-//        loadConfig();
-//        System.out.println("Num dots One: " + numDotsOne);
-//        System.out.println("Num dots Two: " + numDotsTwo);
-//
-//        this.dotSetOne = new DotSet(numDotsOne);
-//        this.dotSetTwo = new DotSet(numDotsTwo);
-//        
-//        this.defineControlType();
-//        
-//        if (TOTAL_AREA_CONTROL_ON) {
-//            this.scaleAreas();
-//        }
-//        
-//        this.difference = numDotsOne - numDotsTwo;
-//        if (this.difference > 0) {
-//            this.setLeftCorrect(true);
-//        } else if (this.difference < 0) {
-//            this.setLeftCorrect(false);
-//        }
-//    }
-    
     /** 
      * Constructor for DotsPair.
      * @param numDotsOne The number of dots in the first set.
@@ -82,6 +55,8 @@ public class DotsPair {
         this.dotSetTwo = new DotSet(numDotsTwo);
         
         this.controlType = controlType;
+        
+        this.defineControlType();
         
         if (TOTAL_AREA_CONTROL_ON) {
             this.scaleAreas();
@@ -119,6 +94,7 @@ public class DotsPair {
         this.randomScaleAreas();
     }
     
+    /** Choose a random scaling if none was specified. */
     private void randomScaleAreas() {
         if (randomGenerator.nextBoolean()) {
             this.matchAreas(dotSetOne, dotSetTwo);
@@ -129,13 +105,16 @@ public class DotsPair {
         }
     }
     
+    /** Used only if specified in configuration. */
     private void defineControlType() {
         if (AVERAGE_RADIUS_CONTROL) {
             this.controlType = ControlType.RADIUS_AVERAGE_EQUAL;
-        } else if (EQUAL_AREAS_ONLY) {
-            this.controlType = ControlType.EQUAL_AREAS;
-        } else if (INVERSE_AREAS_ONLY) {
-            this.controlType = ControlType.INVERSE_AREAS;
+        } else if (TOTAL_AREA_CONTROL_ON) {
+            if (EQUAL_AREAS_ONLY) {
+                this.controlType = ControlType.EQUAL_AREAS;
+            } else if (INVERSE_AREAS_ONLY) {
+                this.controlType = ControlType.INVERSE_AREAS;
+            } 
         } else {
             this.controlType = ControlType.NONE;
         }

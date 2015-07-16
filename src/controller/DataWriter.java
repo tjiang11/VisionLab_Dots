@@ -240,8 +240,8 @@ public class DataWriter {
             return "Equal Average Radii";
         } else if (this.dotsPair.getControlType() == ControlType.NONE) {
             return "None";
-        }
-        return "---";
+        } 
+        return "-";
     }
     
     private String generateResponseTimeText() {
