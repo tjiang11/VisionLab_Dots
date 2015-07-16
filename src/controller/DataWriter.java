@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 
+import model.ControlType;
 import model.DotsPair;
 import model.DotsPairGenerator;
 import model.Player;
@@ -231,13 +232,13 @@ public class DataWriter {
     }
     
     private String generateControlTypeText() {
-        if (this.dotsPair.getControlType() == DotsPair.ControlType.EQUAL_AREAS) {
+        if (this.dotsPair.getControlType() == ControlType.EQUAL_AREAS) {
             return "Equal Areas";
-        } else if (this.dotsPair.getControlType() == DotsPair.ControlType.INVERSE_AREAS) {
+        } else if (this.dotsPair.getControlType() == ControlType.INVERSE_AREAS) {
             return "Inverse Areas";
-        } else if (this.dotsPair.getControlType() == DotsPair.ControlType.RADIUS_AVERAGE_EQUAL) {
+        } else if (this.dotsPair.getControlType() == ControlType.RADIUS_AVERAGE_EQUAL) {
             return "Equal Average Radii";
-        } else if (this.dotsPair.getControlType() == DotsPair.ControlType.NONE) {
+        } else if (this.dotsPair.getControlType() == ControlType.NONE) {
             return "None";
         }
         return "---";

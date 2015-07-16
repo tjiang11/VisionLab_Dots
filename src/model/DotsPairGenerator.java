@@ -21,6 +21,9 @@ public class DotsPairGenerator {
     /** Max number of times the same side may be the correct choice. */
     static final int MAX_TIMES_SAME_ANSWER = 3;
     
+    /** Max number of times the same relative size (or control type) may be the correct choice. */
+    static final int MAX_TIMES_SAME_SIZE_CORRECT = 3;
+    
     /** Map from each difficulty mode to an integer representation. */
     static final int EASY_MODE = 0;
     static final int MEDIUM_MODE = 1;
@@ -55,10 +58,20 @@ public class DotsPairGenerator {
     private ArrayList<Integer> difficultySet;
     
     /** A measure of how many times the same side has been correct. */
-    private int sameChoice;
+    private int sameChoiceCorrect;
+    
+    /** A measure of how many times the same size has been correct, meaning
+     how many times has the cluster with bigger/smaller individual dots been correct.
+     Depends on area control type --> 
+         Equal Areas <--> Smaller Correct  
+         Inverse Areas <--> Bigger Correct */
+    private int sameSizeCorrect;
     
     /** True if the last correct choice was left. False otherwise. */
     private boolean lastWasLeft;
+    
+    /** True if the last correct choice was the cluster with bigger individual dots. */
+    private boolean lastWasBig;
     
     /**
      * Constructor. 
@@ -66,6 +79,7 @@ public class DotsPairGenerator {
     public DotsPairGenerator() {
         this.setSameChoice(0);
         this.setLastWasLeft(false);
+        this.setLastWasBig(false);
         this.difficultySet = new ArrayList<Integer>();
         this.fillDifficultySet();
     }
@@ -158,11 +172,35 @@ public class DotsPairGenerator {
      */
     private void checkAndSet(int dotSetOne, int dotSetTwo) {
         this.checkSameChoice(dotSetOne, dotSetTwo);
+        ControlType controlTypeCandidate = generateRandomAreaControlType();
+        this.checkSameSize(controlTypeCandidate);
+        
+        if (this.getSameSizeCorrect() >= MAX_TIMES_SAME_SIZE_CORRECT) {
+            if (controlTypeCandidate == ControlType.EQUAL_AREAS) {
+                controlTypeCandidate = ControlType.INVERSE_AREAS;
+            } else if (controlTypeCandidate == ControlType.INVERSE_AREAS) {
+                controlTypeCandidate = ControlType.EQUAL_AREAS;
+            }       
+            this.setSameSizeCorrect(0);
+            this.toggleLastWasBig();
+        }
         
         if (this.getSameChoice() >= MAX_TIMES_SAME_ANSWER) {
-            this.setReversePair(dotSetOne, dotSetTwo);
+            this.setReversePair(dotSetOne, dotSetTwo, controlTypeCandidate);
         } else {
-            this.setDotsPair(new DotsPair(dotSetOne, dotSetTwo));
+            this.setDotsPair(new DotsPair(dotSetOne, dotSetTwo, controlTypeCandidate));
+        }
+    }
+
+    /**
+     * Generates a random control type. Either EQUAL_AREAS or INVERSE_AREAS.
+     * @return
+     */
+    private ControlType generateRandomAreaControlType() {
+        if (randomGenerator.nextBoolean()) {
+            return ControlType.EQUAL_AREAS;
+        } else {
+            return ControlType.INVERSE_AREAS;
         }
     }
     
@@ -180,8 +218,8 @@ public class DotsPairGenerator {
      * @param dotSetOne 
      * @param dotSetTwo
      */
-    public void setReversePair(int dotSetOne, int dotSetTwo) {
-        this.setDotsPair(new DotsPair(dotSetTwo, dotSetOne));
+    public void setReversePair(int dotSetOne, int dotSetTwo, ControlType controlType) {
+        this.setDotsPair(new DotsPair(dotSetTwo, dotSetOne, controlType));
         this.toggleLastWasLeft();
         this.setSameChoice(0);
     }
@@ -208,6 +246,29 @@ public class DotsPairGenerator {
             this.lastWasLeft = false;
         }   
     }
+    
+    /**
+     * Check if the same relative size (or control type) is correct
+     * as the last round. Inverse areas <--> Big correct. Equal areas <--> Small correct.
+     * @param controlType the ControlType to be evaluated.
+     */
+    private void checkSameSize(ControlType controlType) {
+        if (controlType == ControlType.INVERSE_AREAS) {
+            if (this.lastWasBig) {
+                this.incrementSameSizeCorrect();
+            } else {
+                this.setSameSizeCorrect(0);
+            }
+            this.lastWasBig = true;
+        } else if (controlType == ControlType.EQUAL_AREAS) {
+            if (!this.lastWasBig) {
+                this.incrementSameSizeCorrect();
+            } else {
+                this.setSameSizeCorrect(0);
+            }
+            this.lastWasBig = false;
+        }
+    }
 
     /**
      * Toggles which of the last choices was correct.
@@ -218,7 +279,17 @@ public class DotsPairGenerator {
         } else {
             this.lastWasLeft = true;
         }
-        
+    }
+    
+    /**
+     * Toggles which of the last relative sizes was correct.
+     */
+    private void toggleLastWasBig() {
+        if (this.lastWasBig) {
+            this.lastWasBig = false;
+        } else {
+            this.lastWasBig = true;
+        }   
     }
     
     public void setRandomDifficulty() {
@@ -238,15 +309,15 @@ public class DotsPairGenerator {
     }
 
     public int getSameChoice() {
-        return this.sameChoice;
+        return this.sameChoiceCorrect;
     }
 
-    public void setSameChoice(int sameChoice) {
-        this.sameChoice = sameChoice;
+    public void setSameChoice(int sameChoiceCorrect) {
+        this.sameChoiceCorrect = sameChoiceCorrect;
     }
 
     public void incrementSameChoice() {
-        this.sameChoice++;
+        this.sameChoiceCorrect++;
     }
     
     public boolean isLastWasLeft() {
@@ -263,5 +334,25 @@ public class DotsPairGenerator {
 
     public void setDifficultyMode(int difficultyMode) {
         this.difficultyMode = difficultyMode;
+    }
+
+    public boolean isLastWasBig() {
+        return lastWasBig;
+    }
+
+    public void setLastWasBig(boolean lastWasBig) {
+        this.lastWasBig = lastWasBig;
+    }
+
+    public int getSameSizeCorrect() {
+        return sameSizeCorrect;
+    }
+
+    public void setSameSizeCorrect(int sameSizeCorrect) {
+        this.sameSizeCorrect = sameSizeCorrect;
+    }
+    
+    public void incrementSameSizeCorrect() {
+        this.sameSizeCorrect++;
     }
 }

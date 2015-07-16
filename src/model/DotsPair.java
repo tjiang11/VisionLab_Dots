@@ -31,14 +31,7 @@ public class DotsPair {
     
     /** The control type of this pair */
     private ControlType controlType;
-    
-    public enum ControlType {
-        EQUAL_AREAS,
-        INVERSE_AREAS,
-        RADIUS_AVERAGE_EQUAL,
-        NONE
-    }
-    
+
     private static boolean TOTAL_AREA_CONTROL_ON;
     private static boolean EQUAL_AREAS_ONLY;
     private static boolean INVERSE_AREAS_ONLY;
@@ -46,12 +39,41 @@ public class DotsPair {
     
     private Random randomGenerator = new Random();
     
+//    /** 
+//     * Constructor for DotsPair.
+//     * @param numDotsOne The number of dots in the first set.
+//     * @param numDotsTwo The number of dots in the second set.
+//     */
+//    public DotsPair(int numDotsOne, int numDotsTwo) {
+//        loadConfig();
+//        System.out.println("Num dots One: " + numDotsOne);
+//        System.out.println("Num dots Two: " + numDotsTwo);
+//
+//        this.dotSetOne = new DotSet(numDotsOne);
+//        this.dotSetTwo = new DotSet(numDotsTwo);
+//        
+//        this.defineControlType();
+//        
+//        if (TOTAL_AREA_CONTROL_ON) {
+//            this.scaleAreas();
+//        }
+//        
+//        this.difference = numDotsOne - numDotsTwo;
+//        if (this.difference > 0) {
+//            this.setLeftCorrect(true);
+//        } else if (this.difference < 0) {
+//            this.setLeftCorrect(false);
+//        }
+//    }
+    
     /** 
      * Constructor for DotsPair.
      * @param numDotsOne The number of dots in the first set.
      * @param numDotsTwo The number of dots in the second set.
+     * @param controlType The control type of this dots pair.
+     *      (Whether the dot sets should have equal areas, inverse areas, or equal average radii.)
      */
-    public DotsPair(int numDotsOne, int numDotsTwo) {
+    public DotsPair(int numDotsOne, int numDotsTwo, ControlType controlType) {
         loadConfig();
         System.out.println("Num dots One: " + numDotsOne);
         System.out.println("Num dots Two: " + numDotsTwo);
@@ -59,7 +81,7 @@ public class DotsPair {
         this.dotSetOne = new DotSet(numDotsOne);
         this.dotSetTwo = new DotSet(numDotsTwo);
         
-        this.defineControlType();
+        this.controlType = controlType;
         
         if (TOTAL_AREA_CONTROL_ON) {
             this.scaleAreas();
@@ -86,14 +108,18 @@ public class DotsPair {
      * Scale the total areas of the dots based on configuration.
      */
     private void scaleAreas() {
-        if (EQUAL_AREAS_ONLY) {
+        if (this.controlType == ControlType.EQUAL_AREAS) {
             this.matchAreas(dotSetOne, dotSetTwo);
             return;
         }
-        if (INVERSE_AREAS_ONLY) {
+        if (this.controlType == ControlType.INVERSE_AREAS) {
             this.inverseMatchAreas(dotSetOne, dotSetTwo);
             return;
         }
+        this.randomScaleAreas();
+    }
+    
+    private void randomScaleAreas() {
         if (randomGenerator.nextBoolean()) {
             this.matchAreas(dotSetOne, dotSetTwo);
             this.controlType = ControlType.EQUAL_AREAS;
