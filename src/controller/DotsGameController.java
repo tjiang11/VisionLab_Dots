@@ -96,8 +96,14 @@ public class DotsGameController implements GameController {
         /** Player has responded and next round is loading. */
         WAITING_BETWEEN_ROUNDS,
         
-        /** Player has not responded and question is being displayed. */
-        WAITING_FOR_RESPONSE,
+        /** Player has not responded and the dots sets are still visible. */
+        WAITING_FOR_RESPONSE_VISIBLE,
+        
+        /** Player has not responded and the dot sets have 
+         * already been hidden after the flash time has passed. */
+        WAITING_FOR_RESPONSE_BLANK,
+
+        NONE
     }
     
     private Object lock = new Object();
@@ -194,9 +200,11 @@ public class DotsGameController implements GameController {
             theView.setGameScreen();
             theView.getPractice().setVisible(false);
             state = CurrentState.GAMEPLAY;
-            gameState = null;
+            gameState = GameState.WAITING_FOR_RESPONSE_VISIBLE;
             SimpleIntegerProperty subjectID = new SimpleIntegerProperty(thePlayer.getSubjectID());
+            /** Reset player data */
             thePlayer = new Player(subjectID);
+            /** Prevent 'F' or 'J' input while loading actual assessment */
             feedback_given = true;
         });
     }
@@ -215,7 +223,7 @@ public class DotsGameController implements GameController {
                     
                     feedback_given = true;
 
-                    if (gameState == GameState.WAITING_FOR_RESPONSE) {
+                    if (gameState == GameState.WAITING_FOR_RESPONSE_BLANK) {
                         gameState = GameState.WAITING_BETWEEN_ROUNDS;
                     }
                     
@@ -442,7 +450,7 @@ public class DotsGameController implements GameController {
             public void handle(WorkerStateEvent e) {
                 setOptions();
                 responseTimeMetric = System.nanoTime();
-                gameState = null;
+                gameState = GameState.WAITING_FOR_RESPONSE_VISIBLE;
             }
         });
         Thread sleeperThread = new Thread(sleeper);
@@ -450,24 +458,37 @@ public class DotsGameController implements GameController {
     }
 
     /**
-     * Set the next round's choices.
+     * Set and show the next round's choices.
      */
     public void setOptions() {
-        DotSet dotSetOne, dotSetTwo;
-        
-        dpg.getNewDifficultyPair();
-        this.currentDotsPair = dpg.getDotsPair();
-        
-        dotSetOne = this.currentDotsPair.getDotSetOne();
-        dotSetTwo = this.currentDotsPair.getDotSetTwo();
-        this.flash();
-        
-        this.paintDotSet(dotSetOne, gcLeft);
-        this.paintDotSet(dotSetTwo, gcRight);
+        this.prepareNextPair();
+        this.paintDots();
+        this.hideDots();
         feedback_given = false;
     }
     
-    private void flash() { 
+    /**
+     * Prepare the next pair.
+     */
+    private void prepareNextPair() {
+        dpg.getNewDifficultyPair();
+        this.currentDotsPair = dpg.getDotsPair();
+    }
+    
+    /**
+     * Show the choices.
+     */
+    private void paintDots() {
+        DotSet dotSetOne = this.currentDotsPair.getDotSetOne();
+        DotSet dotSetTwo = this.currentDotsPair.getDotSetTwo();
+        this.paintDotSet(dotSetOne, gcLeft);
+        this.paintDotSet(dotSetTwo, gcRight);
+    }
+    
+    /**
+     * Hide the dot sets after some time (FLASH_TIME) has passed.
+     */
+    private void hideDots() { 
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected java.lang.Void call() throws Exception {
@@ -482,7 +503,7 @@ public class DotsGameController implements GameController {
                 if (feedback_given) {
                     DotsGameController.gameState = GameState.WAITING_BETWEEN_ROUNDS;
                 } else {
-                    DotsGameController.gameState = GameState.WAITING_FOR_RESPONSE;
+                    DotsGameController.gameState = GameState.WAITING_FOR_RESPONSE_BLANK;
                 }
             }
         });
@@ -490,7 +511,7 @@ public class DotsGameController implements GameController {
     }
 
     /**
-     * Paint the dots.
+     * Paint the dots for a given dotset.
      * @param 
      */
     private void paintDotSet(DotSet dotSet, GraphicsContext graphicsContext) {
