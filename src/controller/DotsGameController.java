@@ -416,7 +416,7 @@ public class DotsGameController implements GameController {
      * then change the scene to the finish screen.
      */
     private void finishGame() {
-        theView.setFinishScreen(gameController);
+        theView.setFinishScreen(thePlayer.getNumCorrect());
     }
   
     /**
