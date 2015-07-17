@@ -21,6 +21,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Screen;
@@ -148,6 +149,25 @@ public final class SetUp {
     }
     
     /**
+     * Sets up the practice complete screen where user has finished completing the practice trials and
+     * is about to begin assessment.
+     * @param gameGUI The graphical user interface.
+     * @return scene the Scene containing the elements of this scene.
+     */
+    public static Scene setUpPracticeCompleteScreen(GameGUI gameGUI) {       
+        AnchorPane layout = new AnchorPane();
+        gameGUI.setPracticeComplete(new Text("Practice Complete!\nReady to begin?"));
+        gameGUI.getPracticeComplete().setTextAlignment(TextAlignment.CENTER);
+        gameGUI.getPracticeComplete().setFont(new Font("Tahoma", 50));
+        gameGUI.getPracticeComplete().setWrappingWidth(600.0);
+        gameGUI.setStartAssessment(new Button("Start Assessment"));
+        layout.getChildren().addAll(gameGUI.getPracticeComplete(), gameGUI.getStartAssessment());
+        setBackground(layout, 0);
+        Scene scene = new Scene(layout, SCREEN_WIDTH, SCREEN_HEIGHT);
+        return scene;
+    }
+    
+    /**
      * Set up the game screen where subject will undergo trials.
      * @param view The graphical user interface.
      * @param primaryStage The stage.
@@ -181,9 +201,13 @@ public final class SetUp {
         view.getGetReadyBox().setAlignment(Pos.CENTER);
         view.getGetReadyBox().getChildren().addAll(view.getGetReady(), view.getGetReadyBar());
         
+        view.setPractice(new Label("PRACTICE"));
+        view.getPractice().setFont(new Font("Tahoma", 50));
+        
         setStars(view, view.getLayout());
         
-        view.getLayout().getChildren().addAll(view.getGetReadyBox(), view.getProgressBar(), view.getLeftOption(), view.getRightOption());
+        view.getLayout().getChildren().addAll(view.getGetReadyBox(), view.getProgressBar(), 
+                view.getLeftOption(), view.getRightOption(), view.getPractice());
         setBackground(view.getLayout(), 0);
         Scene scene = new Scene(view.getLayout(), SCREEN_WIDTH, SCREEN_HEIGHT);
         scene.setCursor(Cursor.NONE);
