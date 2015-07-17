@@ -93,11 +93,6 @@ public final class SetUp {
         view.setLoginBox(new VBox(5));
         view.getLoginBox().setAlignment(Pos.CENTER);
         view.getLoginBox().getChildren().addAll(label, view.getEnterId(), view.getStart(), view.getFeedback());
-
-//        view.setInstructions(new Button());
-//        Image instructionsImage = new Image("/res/images/" + "instructions.png");
-//        view.getInstructions().setGraphic(new ImageView(instructionsImage));
-//        view.getInstructions().setLayoutX(100);
         
         view.getLayout().getChildren().addAll(view.getLoginBox());
         
@@ -109,7 +104,6 @@ public final class SetUp {
         setBackground(view.getLayout(), 0);
         
         return scene;
-        
     }
     
     /**

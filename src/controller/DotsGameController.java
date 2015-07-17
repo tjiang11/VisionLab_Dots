@@ -92,6 +92,11 @@ public class DotsGameController implements GameController {
     /** Describes the current state of gameplay */
     private static GameState gameState;
     
+    /** How many stars the player has earned. 
+     * The player earns a star for every time the
+     * progress bar is filled. */
+    private static int numStars = 0;
+    
     private enum GameState {
         /** Player has responded and next round is loading. */
         WAITING_BETWEEN_ROUNDS,
@@ -218,58 +223,52 @@ public class DotsGameController implements GameController {
         this.theScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if ((event.getCode() == KeyCode.F || event.getCode() == KeyCode.J) 
+                if ((event.getCode() == KeyCode.F 
+                        || event.getCode() == KeyCode.J) 
                         && !feedback_given) {
-                    
-                    feedback_given = true;
-
-                    if (gameState == GameState.WAITING_FOR_RESPONSE_BLANK) {
-                        gameState = GameState.WAITING_BETWEEN_ROUNDS;
-                    }
-                    
-                    /** Update models and view appropriately according to correctness
-                     * of subject's response.
-                     */
-                    gameController.responseAndUpdate(event, theView);
-                    
-                    /** Prepare the next round */
-                    gameController.prepareNextRound(); 
-                    
-                    /** Export data to CSV file in folder 'results/<subject_id>' */
-                    if (state == CurrentState.GAMEPLAY) {
-                        dataWriter.writeToCSV();    
-                    }
-                    
-                    System.out.println(state);
-                    System.out.println(thePlayer.getNumRounds());
-                    if (state == CurrentState.PRACTICE && thePlayer.getNumRounds() >= NUM_PRACTICE_ROUNDS) {
-                        theView.setPracticeCompleteScreen();
-                    }
+                    gameController.handlePressForJ(event);
                 }
             }
         });
     }  
     
     /**
+     * Actions to be executed on the pressing of the F or J key.
+     * Update the models/data, prepare the next round, and export data to CSV.
+     * @param event
+     */
+    private void handlePressForJ(KeyEvent event) {
+        this.responseAndUpdate(event);
+        this.prepareNextRound(); 
+        this.exportDataToCSV();
+    }
+    
+    /** 
+     * Export data to CSV file.
+     */
+    private void exportDataToCSV() {
+        if (state == CurrentState.GAMEPLAY) {
+            dataWriter.writeToCSV();    
+        }
+    }
+    
+    /**
      * Update models and view appropriately according to correctness
-     * of subject's response.
+     * of subject's response.  
      * @param e The key event to check which key the user pressed.
-     * @param view the graphical user interface. 
+     * @param view the graphical user interface
      * @return True if the player is correct. False otherwise.
      */
     public void responseAndUpdate (
-            KeyEvent e, GameGUI view) {
-        boolean correct;
-        DotsPair dotsPair = this.currentDotsPair;
-        Player currentPlayer = this.thePlayer;
-        URL feedbackSoundFileUrl = null;
-        
-        correct = GameLogic.checkAnswerCorrect(e, dotsPair);
-        
-        this.updateProgressBar(view, correct); 
-        this.updatePlayer(currentPlayer, correct); 
-        this.feedbackSound(feedbackSoundFileUrl, correct);  
-        
+            KeyEvent e) {
+        feedback_given = true;
+        if (gameState == GameState.WAITING_FOR_RESPONSE_BLANK) {
+            gameState = GameState.WAITING_BETWEEN_ROUNDS;
+        }
+        DotsPair dp = this.currentDotsPair;
+        boolean correct = GameLogic.checkAnswerCorrect(e, dp);
+        this.updatePlayer(correct);   
+        this.updateGUI(correct);
         this.dataWriter.grabData(this);
     }
     
@@ -278,8 +277,9 @@ public class DotsGameController implements GameController {
      * @param currentPlayer The current player.
      * @param correct True if subject's reponse is correct. False otherwise.
      */
-    private void updatePlayer(Player currentPlayer, boolean correct) {
-        recordResponseTime();
+    private void updatePlayer(boolean correct) {
+        Player currentPlayer = this.thePlayer;
+        this.recordResponseTime();
         if (correct) {
             currentPlayer.addPoint();
             currentPlayer.setRight(true);
@@ -289,45 +289,41 @@ public class DotsGameController implements GameController {
         currentPlayer.incrementNumRounds();
     }
     
-    /**
-     * Update the progressbar. Resets to zero if progress bar is full.
-     * @param pb The view's progress bar.
+    /** 
+     * Update the progressbar, audio, stars, and background.
+     * @param correct Whether the subject answered correctly.
      */
-    /**
-     * Update the progressbar. Resets to zero if progress bar is full.
-     * @param pb The view's progress bar.
-     */
-    private void updateProgressBar(GameGUI view, boolean correct) {
+    private void updateGUI(boolean correct) {
         if (correct) {
-            if (view.getProgressBar().isIndeterminate()) {
-                view.getProgressBar().setProgress(0.0);
-                view.getProgressBar().setStyle("-fx-accent: #0094C5;");
+            if (theView.getProgressBar().isIndeterminate()) {
+                theView.getProgressBar().setProgress(0.0);
+                theView.getProgressBar().setStyle("-fx-accent: #0094C5;");
             }
-            view.getProgressBar().setProgress(view.getProgressBar().getProgress() + .25);
-            if (view.getProgressBar().getProgress() >= 1.00) {
-                view.getProgressBar().setProgress(0.25);
+            theView.getProgressBar().setProgress(theView.getProgressBar().getProgress() + .25);
+            if (theView.getProgressBar().getProgress() >= 1.00) {
+                theView.getProgressBar().setProgress(0.25);
                 
                 URL powerUpSound = getClass().getResource("/res/sounds/Powerup.wav");
                 new AudioClip(powerUpSound.toString()).play();
                 
-                int starToReveal = this.thePlayer.getNumStars();
-                view.getStarNodes()[starToReveal].setVisible(true);
-                this.thePlayer.incrementNumStars();
+                int starToReveal = numStars;
+                theView.getStarNodes()[starToReveal].setVisible(true);
+                numStars++;
                 
-                if (this.thePlayer.getNumStars() > 2) {
-                    view.changeBackground(1);
+                if (numStars > 2) {
+                    theView.changeBackground(1);
                 }
             }
         } else {
-            view.getProgressBar().setStyle("-fx-accent: #0094C5;");
+            theView.getProgressBar().setStyle("-fx-accent: #0094C5;");
             if (PUNISH) {
-                view.getProgressBar().setProgress(view.getProgressBar().getProgress() - .125);
-                if (view.getProgressBar().isIndeterminate()) {
-                    view.getProgressBar().setStyle("-fx-accent: red;");
-                    
+                theView.getProgressBar().setProgress(theView.getProgressBar().getProgress() - .125);
+                if (theView.getProgressBar().isIndeterminate()) {
+                    theView.getProgressBar().setStyle("-fx-accent: red;");                    
                 }
             }
         }
+        this.feedbackSound(correct); 
     }
     
     /** If user inputs correct answer play positive feedback sound,
@@ -335,7 +331,8 @@ public class DotsGameController implements GameController {
      * @param feedbackSoundFileUrl the File Url of the Sound to be played.
      * @param correct whether the subject answered correctly or not.
      */
-    private void feedbackSound(URL feedbackSoundFileUrl, boolean correct) {
+    private void feedbackSound(boolean correct) {
+        URL feedbackSoundFileUrl;
         if (correct) {
             feedbackSoundFileUrl = 
                     getClass().getResource("/res/sounds/Ping.aiff");
