@@ -43,7 +43,7 @@ import javafx.stage.Stage;
 public final class SetUp {
     
     /** Background */
-    static final String BACKGROUNDS[] = {"sky", "journey"};
+    static final String BACKGROUNDS[] = {"sky", "journey", "mountains", "beach"};
 
     /** Width and height of the computer's screen */
     static final Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();
@@ -282,8 +282,10 @@ public final class SetUp {
      * @param view The graphical user interface.
      * @param layout The layout.
      */
-    public static void setBackground(AnchorPane layout, int level) {
-        
+    public static void setBackground(AnchorPane layout, int level) { 
+        if (level >= BACKGROUNDS.length) {
+            level = BACKGROUNDS.length - 1;
+        }
         String backgroundName = BACKGROUNDS[level];
         
         BackgroundImage bg = new BackgroundImage(
@@ -297,6 +299,5 @@ public final class SetUp {
                 BackgroundPosition.CENTER,
                 BackgroundSize.DEFAULT);
         layout.setBackground(new Background(bg));
-    }
-    
+    }  
 }

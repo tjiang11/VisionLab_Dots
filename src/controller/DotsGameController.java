@@ -58,6 +58,9 @@ public class DotsGameController implements GameController {
     /** Time in milliseconds for the player to get ready after pressing start */
     final static int GET_READY_TIME = 2000;
     
+    /** Integer representing each each background. */
+    private static int backgroundNumber = 0;
+    
     /** Time between rounds in milliseconds. */
     static int TIME_BETWEEN_ROUNDS;
     
@@ -96,6 +99,9 @@ public class DotsGameController implements GameController {
      * The player earns a star for every time the
      * progress bar is filled. */
     private static int numStars = 0;
+    
+    /** Number of stars earned before changing to next background. */
+    private static final int STARS_PER_BACKGROUND = 2;
     
     private enum GameState {
         /** Player has responded and next round is loading. */
@@ -310,9 +316,7 @@ public class DotsGameController implements GameController {
                 theView.getStarNodes()[starToReveal].setVisible(true);
                 numStars++;
                 
-                if (numStars > 2) {
-                    theView.changeBackground(1);
-                }
+                this.checkBackground();
             }
         } else {
             theView.getProgressBar().setStyle("-fx-accent: #0094C5;");
@@ -324,6 +328,15 @@ public class DotsGameController implements GameController {
             }
         }
         this.feedbackSound(correct); 
+    }
+    
+    /**
+     * Check to see if background needs to be switched and if so change the background.
+     */
+    private void checkBackground() {
+        if (numStars % STARS_PER_BACKGROUND == 0) {
+            theView.changeBackground(++backgroundNumber);
+        }    
     }
     
     /** If user inputs correct answer play positive feedback sound,
@@ -422,6 +435,8 @@ public class DotsGameController implements GameController {
      */
     private void finishPractice() {
         theView.setPracticeCompleteScreen();
+        numStars = 0;
+        backgroundNumber = 0;
     }
     
     /**
