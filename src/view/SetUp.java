@@ -252,10 +252,11 @@ public final class SetUp {
     /**
      * Set up the finish screen.
      * @param view The graphical user interface.
+     * @param level 
      * @param primaryStage The stage.
      * @return The finishing scene.
      */
-    public static Scene setUpFinishScreen(GameGUI view, int points) {
+    public static Scene setUpFinishScreen(GameGUI view, int points, int level) {
         
         AnchorPane layout = new AnchorPane();
         
@@ -272,7 +273,7 @@ public final class SetUp {
         
         layout.getChildren().addAll(view.getFinishMessage());
         
-        setBackground(layout, 0);
+        setBackground(layout, level);
         
         return new Scene(layout, SCREEN_WIDTH, SCREEN_HEIGHT);
     }

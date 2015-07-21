@@ -134,6 +134,7 @@ public class GameGUI {
      */
     public void setInstructionsScreen() {
         Scene instructionsScene = SetUp.setUpInstructionsScreen(this, this.primaryStage);
+        this.scene = instructionsScene;
         this.primaryStage.setScene(instructionsScene);
         this.primaryStage.setFullScreen(true);
         this.getNext().setLayoutX(this.getNext().getLayoutX() - this.getNext().getWidth() / 2);
@@ -195,8 +196,8 @@ public class GameGUI {
      * Sets the ending screen informing the subject of their completion.
      * @param stage The user interface stage.
      */
-    public void setFinishScreen(int points) {
-        Scene finishScene = SetUp.setUpFinishScreen(this, points);
+    public void setFinishScreen(int points, int level) {
+        Scene finishScene = SetUp.setUpFinishScreen(this, points, level);
         this.scene = finishScene;
         this.primaryStage.setScene(this.scene);
 
