@@ -363,7 +363,7 @@ public class DotsGameController implements GameController {
      * Also sets up the canvases on which the dots will be painted.
      */
     public void prepareFirstRound() {
-        feedback_given = false;
+        feedback_given = true;
         Task<Void> sleeper = new Task<Void>() {   
             @Override
             protected Void call() throws Exception {
@@ -378,6 +378,7 @@ public class DotsGameController implements GameController {
         sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent e) {
+                feedback_given = false;
                 
                 gcLeft = theView.getLeftOption().getGraphicsContext2D();
                 gcRight = theView.getRightOption().getGraphicsContext2D();

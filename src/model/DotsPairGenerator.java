@@ -157,44 +157,57 @@ public class DotsPairGenerator {
         dotSetTwo = dotSetOne + difference;
         
         if (randomGenerator.nextBoolean()) {
-            int temp = dotSetTwo;
-            dotSetTwo = dotSetOne;
-            dotSetOne = temp;
+            dotSetOne = swap(dotSetTwo, dotSetTwo = dotSetOne);
         }
         this.checkAndSet(dotSetOne, dotSetTwo);
     }
     
     /**
-     * Check if choices are the same and set the reverse if the same side has been
-     * correct for MAX_TIMES_SAME_ANSWER times in a row.
-     * @param dotSetOne
-     * @param dotSetTwo
+     * Perform checks to see if/how the pair should be set and set.
+     * @param dotSetOne number of dots in dot set one.
+     * @param dotSetTwo number of dots in dot set two.
      */
-    private void checkAndSet(int dotSetOne, int dotSetTwo) {
-        this.checkSameChoice(dotSetOne, dotSetTwo);
-        ControlType controlTypeCandidate = generateRandomAreaControlType();
-        this.checkSameSize(controlTypeCandidate);
+    private void checkAndSet(int dotSetOne, int dotSetTwo) {  
+        ControlType controlType = generateRandomAreaControlType();
+        this.performChecks(dotSetOne, dotSetTwo, controlType);
         
         if (this.getSameSizeCorrect() >= MAX_TIMES_SAME_SIZE_CORRECT) {
-            if (controlTypeCandidate == ControlType.EQUAL_AREAS) {
-                controlTypeCandidate = ControlType.INVERSE_AREAS;
-            } else if (controlTypeCandidate == ControlType.INVERSE_AREAS) {
-                controlTypeCandidate = ControlType.EQUAL_AREAS;
-            }       
-            this.setSameSizeCorrect(0);
-            this.toggleLastWasBig();
+            this.swapControlType(controlType);
         }
         
         if (this.getSameChoice() >= MAX_TIMES_SAME_ANSWER) {
-            this.setReversePair(dotSetOne, dotSetTwo, controlTypeCandidate);
+            this.setReversePair(dotSetOne, dotSetTwo, controlType);
         } else {
-            this.setDotsPair(new DotsPair(dotSetOne, dotSetTwo, controlTypeCandidate));
+            this.setDotsPair(new DotsPair(dotSetOne, dotSetTwo, controlType));
         }
+    }
+    
+    /**
+     * Swap control type between EQUAL AREAS and INVERSE AREAS.
+     * @param controlTypeCandidate control type to be changed.
+     */
+    private void swapControlType(ControlType controlTypeCandidate) {
+        if (controlTypeCandidate == ControlType.EQUAL_AREAS) {
+            controlTypeCandidate = ControlType.INVERSE_AREAS;
+        } else if (controlTypeCandidate == ControlType.INVERSE_AREAS) {
+            controlTypeCandidate = ControlType.EQUAL_AREAS;
+        }       
+        this.setSameSizeCorrect(0);
+        this.toggleLastWasBig();
+    }
+    
+    /**
+     * Perform checks.
+     * @return true if this pair should NOT be set.
+     */
+    private void performChecks(int dotSetOne, int dotSetTwo, ControlType controlTypeCandidate) {
+        this.checkSameChoice(dotSetOne, dotSetTwo);
+        this.checkSameSize(controlTypeCandidate);
     }
 
     /**
      * Generates a random control type. Either EQUAL_AREAS or INVERSE_AREAS.
-     * @return
+     * @return random control type.
      */
     private ControlType generateRandomAreaControlType() {
         if (randomGenerator.nextBoolean()) {
@@ -290,6 +303,16 @@ public class DotsPairGenerator {
         } else {
             this.lastWasBig = true;
         }   
+    }
+    
+    /** 
+     * Swap values of x and y. To be used as an expression.
+     * 
+     * @param x
+     * @param y This parameter should be an assignment.
+     */
+    private int swap(int x, int y) {
+        return x;
     }
     
     public void setRandomDifficulty() {

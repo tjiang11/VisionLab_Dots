@@ -50,6 +50,9 @@ public class DotSet {
     /** Random number generator */
     private Random randomGenerator = new Random();
     
+    /** The minimum distance in pixels two dots can be from each other. */
+    static final int MIN_DISTANCE_BETWEEN_DOTS = 3;
+    
     /**
      * Constructor for DotSet with a specified number of total dots to contain. 
      * @param numDots total number of dots this dotSet will have.
@@ -174,8 +177,7 @@ public class DotSet {
         double centerX = x + radius;
         double centerY = y + radius;
 
-        for (int i = 0; i < positions.size(); i++)
-        {
+        for (int i = 0; i < positions.size(); i++) {
             Coordinate otherPosition = positions.get(i);
             double otherDiameter = diameters.get(i);
             double otherRadius = otherDiameter/2;
@@ -185,8 +187,7 @@ public class DotSet {
             double dx = centerX - otherCenterX;
             double dy = centerY - otherCenterY;
             double distance = Math.hypot(dx, dy);
-            if (distance < radius + otherRadius)
-            {
+            if (distance < radius + otherRadius + MIN_DISTANCE_BETWEEN_DOTS) {
                 return true;
             }
         }
