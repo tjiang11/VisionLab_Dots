@@ -136,15 +136,25 @@ public class DotsPairGenerator {
      */
     public void getNewDifficultyPair() {
         this.setDifficulty();
-        int difference = 0;
-        if (this.getDifficultyMode() == EASY_MODE) {
-            difference = this.randomGenerator.nextInt(NUM_CHOICES_IN_MODE) + EASY_MODE_MIN;
-        } else if (this.getDifficultyMode() == MEDIUM_MODE) {
-            difference = this.randomGenerator.nextInt(NUM_CHOICES_IN_MODE) + MEDIUM_MODE_MIN;
-        } else if (this.getDifficultyMode() == HARD_MODE) {
-            difference = this.randomGenerator.nextInt(NUM_CHOICES_IN_MODE) + HARD_MODE_MIN;
-        }
+        int difference = this.decideDifference();
         this.getNewPair(difference);
+    }
+    
+    /**
+     * Decide the distance between the two choices, based on current difficulty.
+     * @return int distance between the choices.
+     */
+    private int decideDifference() {
+        switch (this.difficultyMode) {
+        case EASY_MODE:
+            return this.randomGenerator.nextInt(NUM_CHOICES_IN_MODE) + EASY_MODE_MIN;
+        case MEDIUM_MODE:
+            return this.randomGenerator.nextInt(NUM_CHOICES_IN_MODE) + MEDIUM_MODE_MIN;
+        case HARD_MODE:
+            return this.randomGenerator.nextInt(NUM_CHOICES_IN_MODE) + HARD_MODE_MIN;
+        }
+        System.err.println("Error on decideDifference");
+        return 0;
     }
     
     /**
