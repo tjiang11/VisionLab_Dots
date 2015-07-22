@@ -3,7 +3,6 @@ package view;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -80,30 +79,21 @@ public final class SetUp {
      * @param primaryStage The stage.
      * @return The login scene.
      */
-    public static Scene setUpLoginScreen(GameGUI view, Stage primaryStage) {
+    public static void setUpLoginScreen(GameGUI view, Stage primaryStage) {
         Label label = new Label("Enter your Subject ID");
-
         view.setStart(new Button("Start"));
         view.setEnterId(new TextField());
         view.setFeedback(new Label());
-
-        view.setLayout(new AnchorPane());
-
         view.getEnterId().setAlignment(Pos.CENTER);
         view.setLoginBox(new VBox(5));
         view.getLoginBox().setAlignment(Pos.CENTER);
         view.getLoginBox().getChildren().addAll(label, view.getEnterId(), view.getStart(), view.getFeedback());
-        
-        view.getLayout().getChildren().addAll(view.getLoginBox());
-        
-        Scene scene = new Scene(view.getLayout(), 
-                SCREEN_WIDTH, SCREEN_HEIGHT);
-
+        view.getLayout().getChildren().setAll(view.getLoginBox());
         view.getEnterId().requestFocus();
-        
-        setBackground(view.getLayout(), 0);
-        
-        return scene;
+        view.getPrimaryStage().show(); 
+        view.getLoginBox().setLayoutX((SetUp.SCREEN_WIDTH / 2) - (view.getLoginBox().getWidth() / 2));
+        view.getLoginBox().setLayoutY(SetUp.SCREEN_HEIGHT / 2 - view.getLoginBox().getHeight());
+        setBackground(view.getLayout(), 0);       
     }
     
     /**
@@ -112,11 +102,7 @@ public final class SetUp {
      * @param primaryStage stage
      * @return Scene the instructions scene
      */
-    public static Scene setUpInstructionsScreen(GameGUI gameGUI,
-            Stage primaryStage) {
-        
-        AnchorPane layout = new AnchorPane();
-        
+    public static void setUpInstructionsScreen(GameGUI view, Stage primaryStage) {
         Text instructionsText = new Text();
         instructionsText.setText("In this assessment, for each question you will be shown two clusters of dots. "
                 + "Decide which cluster contains the greater number of dots. "
@@ -127,37 +113,34 @@ public final class SetUp {
         instructionsText.setLayoutX(SCREEN_WIDTH * .1);
         instructionsText.setLayoutY(SCREEN_HEIGHT * .15);
         instructionsText.setWrappingWidth(SCREEN_WIDTH * .8);
-        
-        gameGUI.setNext(new Button("Next"));
-        gameGUI.getNext().setLayoutX(SCREEN_WIDTH / 2); 
-        gameGUI.getNext().setLayoutY(SCREEN_HEIGHT * .83);
-        gameGUI.getNext().setFont(new Font("Tahoma", 20));
-        gameGUI.getNext().setPrefHeight(SCREEN_HEIGHT * .06);
-        gameGUI.getNext().setPrefWidth(SCREEN_WIDTH * .06);
-        
-        layout.getChildren().addAll(instructionsText, gameGUI.getNext());
-        setBackground(layout, 0);
-        Scene scene = new Scene(layout, SCREEN_WIDTH, SCREEN_HEIGHT);
-        return scene;
+        view.setNext(new Button("Next"));
+        view.getNext().setFont(new Font("Tahoma", 20));
+        view.getNext().setPrefHeight(SCREEN_HEIGHT * .06);
+        view.getNext().setPrefWidth(SCREEN_WIDTH * .06);
+        view.getNext().setLayoutX(SCREEN_WIDTH / 2 - view.getNext().getPrefWidth() / 2);        
+        view.getNext().setLayoutY(SCREEN_HEIGHT * .83);
+        view.getLayout().getChildren().setAll(instructionsText, view.getNext());
     }
     
     /**
      * Sets up the practice complete screen where user has finished completing the practice trials and
      * is about to begin assessment.
-     * @param gameGUI The graphical user interface.
+     * @param view The graphical user interface.
      * @return scene the Scene containing the elements of this scene.
      */
-    public static Scene setUpPracticeCompleteScreen(GameGUI gameGUI) {       
-        AnchorPane layout = new AnchorPane();
-        gameGUI.setPracticeComplete(new Text("Practice Complete!\nReady to begin?"));
-        gameGUI.getPracticeComplete().setTextAlignment(TextAlignment.CENTER);
-        gameGUI.getPracticeComplete().setFont(new Font("Tahoma", 50));
-        gameGUI.getPracticeComplete().setWrappingWidth(600.0);
-        gameGUI.setStartAssessment(new Button("Start Assessment"));
-        layout.getChildren().addAll(gameGUI.getPracticeComplete(), gameGUI.getStartAssessment());
-        setBackground(layout, 0);
-        Scene scene = new Scene(layout, SCREEN_WIDTH, SCREEN_HEIGHT);
-        return scene;
+    public static void setUpPracticeCompleteScreen(GameGUI view) {       
+        view.setPracticeComplete(new Text("Practice Complete!\nReady to begin?"));
+        view.getPracticeComplete().setTextAlignment(TextAlignment.CENTER);
+        view.getPracticeComplete().setFont(new Font("Tahoma", 50));
+        view.getPracticeComplete().setWrappingWidth(600.0);
+        view.setStartAssessment(new Button("Start Assessment"));
+        view.getPracticeComplete().setLayoutY(SetUp.SCREEN_HEIGHT * .4);
+        view.getPracticeComplete().setLayoutX(SetUp.SCREEN_WIDTH / 2 - view.getPracticeComplete().getWrappingWidth() / 2);
+        view.getStartAssessment().setPrefWidth(SCREEN_HEIGHT * .15);
+        view.getStartAssessment().setLayoutY(SetUp.SCREEN_HEIGHT * .6);
+        view.getStartAssessment().setLayoutX(SetUp.SCREEN_WIDTH / 2 - view.getStartAssessment().getPrefWidth() / 2);
+        view.getLayout().getChildren().setAll(view.getPracticeComplete(), view.getStartAssessment());
+        view.getScene().setCursor(Cursor.DEFAULT);
     }
     
     /**
@@ -167,13 +150,9 @@ public final class SetUp {
      * @param subjectID The subject's ID.
      * @return The game scene.
      */
-    public static Scene setUpGameScreen(GameGUI view, 
-            Stage primaryStage) {
-        
-        view.setLayout(new AnchorPane());
+    public static void setUpGameScreen(GameGUI view) {
         
         setUpOptions(view);
-        initialButtonSetUp(view);
         
         view.setProgressBar(new ProgressBar(0.0));
         view.getProgressBar().setScaleY(2.0);
@@ -196,18 +175,28 @@ public final class SetUp {
         
         view.setPractice(new Label("PRACTICE"));
         view.getPractice().setFont(new Font("Tahoma", 50));
-        
-        setStars(view, view.getLayout());
-        
-        view.getLayout().getChildren().addAll(view.getGetReadyBox(), view.getProgressBar(), 
+
+        view.getLayout().getChildren().setAll(view.getGetReadyBox(), view.getProgressBar(), 
                 view.getLeftOption(), view.getRightOption(), view.getPractice());
+        
+        setStars(view);
+
+        view.getGetReadyBox().setPrefHeight(SCREEN_HEIGHT * .1);
+        view.getGetReadyBox().setPrefWidth(SCREEN_WIDTH * .4);    
+        view.getGetReadyBox().setLayoutY((SetUp.SCREEN_HEIGHT / 2) - view.getGetReadyBox().getPrefHeight());
+        view.getGetReadyBox().setLayoutX((SetUp.SCREEN_WIDTH / 2) - (view.getGetReadyBox().getPrefWidth() / 2));
+        
+        view.getPractice().setPrefHeight(SCREEN_HEIGHT * .1);
+        view.getPractice().setPrefWidth(SCREEN_WIDTH * .2);
+        view.getPractice().setAlignment(Pos.CENTER);        
+        view.getPractice().setLayoutX((SetUp.SCREEN_WIDTH / 2) - (view.getPractice().getPrefWidth() / 2));
+        view.getPractice().setLayoutY(SetUp.SCREEN_HEIGHT * .04);
+        
         setBackground(view.getLayout(), 0);
-        Scene scene = new Scene(view.getLayout(), SCREEN_WIDTH, SCREEN_HEIGHT);
-        scene.setCursor(Cursor.NONE);
-        return scene;
+        view.getScene().setCursor(Cursor.NONE);
     }
     
-    private static void setStars(GameGUI view, AnchorPane layout) {
+    private static void setStars(GameGUI view) {
         
         Image stars[] = new Image[NUM_STARS];
         view.setStarNodes(new ImageView[NUM_STARS]);
@@ -220,7 +209,7 @@ public final class SetUp {
             view.getStarNodes()[i].setLayoutY(STAR_Y);
             view.getStarNodes()[i].setLayoutX(FIRST_STAR_X - (i * STAR_SHIFT));
             view.getStarNodes()[i].setVisible(false);
-            layout.getChildren().add(view.getStarNodes()[i]);
+            view.getLayout().getChildren().add(view.getStarNodes()[i]);
         }            
     }
 
@@ -239,43 +228,29 @@ public final class SetUp {
         view.getRightOption().setLayoutX(RIGHT_OPTION_X);
         view.getRightOption().setLayoutY(RIGHT_OPTION_Y);
     }
-    
-    /**
-     * Setup the style of the two options.
-     * @param view The graphical user interface.
-     */
-    public static void initialButtonSetUp(GameGUI view) {
-        view.getLeftOption().setStyle("-fx-background-color: black;");
-        view.getRightOption().setStyle("-fx-background-color: black;");
-    }
 
     /**
      * Set up the finish screen.
      * @param view The graphical user interface.
-     * @param level 
      * @param primaryStage The stage.
      * @return The finishing scene.
      */
-    public static Scene setUpFinishScreen(GameGUI view, int points, int level) {
-        
-        AnchorPane layout = new AnchorPane();
-        
+    public static void setUpFinishScreen(GameGUI view, int points, int level) {      
         Label score = new Label();
         score.setText("You scored " 
                 + points + " points!");
         view.setCongratulations(new Label("You did it!"));
         view.getCongratulations().setFont(Font.font("Verdana", 20));
         score.setFont(Font.font("Tahoma", 16));
-        
         view.setFinishMessage(new VBox(6));
         view.getFinishMessage().getChildren().addAll(view.getCongratulations(), score);
-        view.getFinishMessage().setAlignment(Pos.CENTER);
-        
-        layout.getChildren().addAll(view.getFinishMessage());
-        
-        setBackground(layout, level);
-        
-        return new Scene(layout, SCREEN_WIDTH, SCREEN_HEIGHT);
+        view.getFinishMessage().setAlignment(Pos.CENTER); 
+        view.getLayout().getChildren().setAll(view.getFinishMessage());    
+        view.getFinishMessage().setPrefHeight(SCREEN_HEIGHT * .3);
+        view.getFinishMessage().setPrefWidth(SCREEN_WIDTH * .3);
+        view.getFinishMessage().setLayoutX((SetUp.SCREEN_WIDTH / 2) - (view.getFinishMessage().getPrefWidth() / 2));
+        view.getFinishMessage().setLayoutY((SetUp.SCREEN_HEIGHT / 2) - (view.getFinishMessage().getPrefHeight() / 2));
+        setBackground(view.getLayout(), level);
     }
     
     /**

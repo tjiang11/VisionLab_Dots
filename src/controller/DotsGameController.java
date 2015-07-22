@@ -444,6 +444,7 @@ public class DotsGameController implements GameController {
      */
     private void finishGame() {
         theView.setFinishScreen(thePlayer.getNumCorrect(), backgroundNumber);
+        theView.getScene().setOnKeyPressed(null);
     }
   
     /**
