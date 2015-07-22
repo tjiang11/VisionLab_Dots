@@ -110,7 +110,7 @@ public class GameGUI {
      * @throws IOException
      */
     private void setLoginScreen() {
-        SetUp.setUpLoginScreen(this, this.primaryStage);
+        SetUp.setUpLoginScreen(this);
         DGC.setLoginHandlers(); 
     }
 
@@ -118,7 +118,7 @@ public class GameGUI {
      * Sets the screen where instructions are shown.
      */
     public void setInstructionsScreen() {
-        SetUp.setUpInstructionsScreen(this, this.primaryStage);
+        SetUp.setUpInstructionsScreen(this);
         this.DGC.setInstructionsHandlers();
     }
     
@@ -128,7 +128,6 @@ public class GameGUI {
     public void setPracticeCompleteScreen() {
         SetUp.setUpPracticeCompleteScreen(this);
         this.DGC.setPracticeCompleteHandlers();
-
     }
 
     /**
