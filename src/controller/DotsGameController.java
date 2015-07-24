@@ -349,7 +349,7 @@ public class DotsGameController implements GameController {
                 theView.getProgressBar().setProgress(0.0);
                 theView.getProgressBar().setStyle("-fx-accent: #0094C5;");
             }
-            theView.getProgressBar().setProgress(theView.getProgressBar().getProgress() + .25);
+            theView.getProgressBar().setProgress(theView.getProgressBar().getProgress() + .1666667);
             if (theView.getProgressBar().getProgress() >= 1.00) {
                 theView.getProgressBar().setProgress(0.25);
                 
