@@ -250,7 +250,6 @@ public class DotsGameController implements GameController {
             state = CurrentState.GAMEPLAY;
             gameState = GameState.WAITING_FOR_RESPONSE_VISIBLE;
             this.resetPlayer();
-            feedback_given = true;
         });
     }
     
@@ -380,6 +379,11 @@ public class DotsGameController implements GameController {
     private void checkBackground() {
         if (numStars % STARS_PER_BACKGROUND == 0) {
             theView.changeBackground(++backgroundNumber);
+            
+            URL applauseSound = getClass().getResource("/res/sounds/Applause.wav");
+            AudioClip applause = new AudioClip(applauseSound.toString());
+            applause.setRate(1.4);
+            applause.play();
         }    
     }
     
@@ -481,6 +485,7 @@ public class DotsGameController implements GameController {
      */
     private void finishPractice() {
         theView.setPracticeCompleteScreen();
+        theView.getScene().setOnKeyPressed(null);
         numStars = 0;
         backgroundNumber = 0;
     }

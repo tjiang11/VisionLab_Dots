@@ -11,7 +11,7 @@ package controller;
 public interface GameController {
     
     /** Number of rounds. One round is one pair of options. */
-    public static final int NUM_ROUNDS = 40;
+    public static final int NUM_ROUNDS = 1000;
     
     /** Number of practice rounds. */
     public static final int NUM_PRACTICE_ROUNDS = 10;
