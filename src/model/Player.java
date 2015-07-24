@@ -15,6 +15,18 @@ public class Player {
     /** The subject's assigned ID number. */
     private IntegerProperty subjectID;
     
+    /** Enum for gender */
+    public enum Gender {
+        MALE,
+        FEMALE,
+    }
+    
+    /** The subject's gender */
+    private Gender subjectGender;
+    
+    /** The subject's age. */
+    private IntegerProperty subjectAge;
+    
     /** The number of correct answers the subject has input. */
     private IntegerProperty numCorrect;
     
@@ -32,14 +44,17 @@ public class Player {
      */
     public Player() {
         this.subjectID = new SimpleIntegerProperty(0);
+        this.subjectAge = new SimpleIntegerProperty(0);
         this.numCorrect = new SimpleIntegerProperty(0);
         this.numRounds = new SimpleIntegerProperty(0);
         this.setResponseTime(0);
     }
 
-    public Player(IntegerProperty subjectID) {
+    public Player(IntegerProperty subjectID, Gender subjectGender, IntegerProperty subjectAge) {
         this();
         this.subjectID = subjectID;
+        this.subjectGender = subjectGender;
+        this.subjectAge = subjectAge;
     }
     
     public double getRT() {
@@ -88,5 +103,21 @@ public class Player {
 
     public void setRight(boolean isRight) {
         this.isRight = isRight;
+    }
+
+    public Gender getSubjectGender() {
+        return subjectGender;
+    }
+
+    public void setSubjectGender(Gender subjectGender) {
+        this.subjectGender = subjectGender;
+    }
+
+    public int getSubjectAge() {
+        return this.subjectAge.get();
+    }
+
+    public void setSubjectAge(int subjectAge) {
+        this.subjectAge.set(subjectAge);
     }
 }

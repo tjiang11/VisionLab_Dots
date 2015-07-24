@@ -27,6 +27,8 @@ public class DataWriter {
 
     public static final String DELIMITER = ",";
     public static final String SUBJECT_ID = "Subject ID";
+    public static final String SUBJECT_AGE = "Subject Age";
+    public static final String SUBJECT_GENDER = "Subject Gender";
     public static final String LEFT_CHOICE = "Left Choice";
     public static final String RIGHT_CHOICE = "Right Choice";
     public static final String WHICH_SIDE_CORRECT = "Side Correct";
@@ -117,6 +119,8 @@ public class DataWriter {
      */
     private String generateColumnNames() {
         String text = SUBJECT_ID + DELIMITER
+                + SUBJECT_AGE + DELIMITER
+                + SUBJECT_GENDER + DELIMITER
                 + LEFT_CHOICE + DELIMITER
                 + RIGHT_CHOICE + DELIMITER
                 + WHICH_SIDE_CORRECT + DELIMITER
@@ -137,6 +141,8 @@ public class DataWriter {
      */
     public String generateTrialText() {
         String subjectID = this.generateSubjectIdText();
+        String subjectAge = this.generateSubjectAgeText();
+        String subjectGender = this.generateSubjectGenderText();
         String leftChoice = this.generateLeftChoiceText();       
         String rightChoice = this.generateRightChoiceText();
         String whichSideCorrect = this.generateWhichSideCorrectText();
@@ -150,6 +156,8 @@ public class DataWriter {
         String consecutiveRounds = this.generateConsecutiveRoundsText();
         
         String trialText = subjectID + DELIMITER
+                + subjectAge + DELIMITER
+                + subjectGender + DELIMITER
                 + leftChoice + DELIMITER
                 + rightChoice + DELIMITER
                 + whichSideCorrect + DELIMITER
@@ -168,6 +176,15 @@ public class DataWriter {
     private String generateSubjectIdText() {
         return Integer.toString(
                 this.player.getSubjectID());
+    }
+    
+    private String generateSubjectAgeText() {
+        return Integer.toString(
+                this.player.getSubjectAge());
+    }
+    
+    private String generateSubjectGenderText() {
+        return this.player.getSubjectGender().toString();
     }
     
     private String generateLeftChoiceText() {

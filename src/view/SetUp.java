@@ -1,5 +1,6 @@
 package view;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
@@ -7,7 +8,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -16,7 +19,9 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -79,19 +84,48 @@ public final class SetUp {
      * @return The login scene.
      */
     public static void setUpLoginScreen(GameGUI view) {
-        Label label = new Label("Enter your Subject ID");
+        Label labelID = new Label("Enter your Subject ID");
+        Label labelGender = new Label("Pick your gender");
+        Label labelAge = new Label("Enter your age");
+        
         view.setStart(new Button("Start"));
         view.setEnterId(new TextField());
-        view.setFeedback(new Label());
+        view.setFeedback(new Label("That's not your ID, silly!"));
+        view.setFeedbackGender(new Label("Please pick your gender!"));
+        view.setFeedbackAge(new Label("Please enter your age!"));
+        view.getFeedback().setTextFill(Color.RED);
+        view.getFeedbackGender().setTextFill(Color.RED);
+        view.getFeedbackAge().setTextFill(Color.RED);
+        view.getFeedback().setVisible(false);
+        view.getFeedbackGender().setVisible(false);
+        view.getFeedbackAge().setVisible(false);
         view.getEnterId().setAlignment(Pos.CENTER);
+
         view.setLoginBox(new VBox(5));
+        Insets loginBoxInsets = new Insets(30, 30, 30, 30);
+        view.getLoginBox().setPadding(loginBoxInsets);
+        view.getLoginBox().setStyle("-fx-background-color: rgba(238, 238, 255, 0.5);"
+                + "-fx-border-style: solid;");
+
         view.getLoginBox().setAlignment(Pos.CENTER);
-        view.getLoginBox().getChildren().addAll(label, view.getEnterId(), view.getStart(), view.getFeedback());
+        view.setPickGender(new ToggleGroup());
+        view.setPickFemale(new RadioButton("Female"));
+        view.setPickMale(new RadioButton("Male"));
+        HBox pickGenderBox = new HBox(25);
+        pickGenderBox.getChildren().addAll(view.getPickFemale(), view.getPickMale());
+        view.getPickFemale().setToggleGroup(view.getPickGender());
+        view.getPickMale().setToggleGroup(view.getPickGender());
+        view.setEnterAge(new TextField());
+        view.getEnterAge().setAlignment(Pos.CENTER);
+        view.getLoginBox().getChildren().addAll(labelID, view.getEnterId(), view.getFeedback(), 
+                labelGender, pickGenderBox, view.getFeedbackGender(), 
+                labelAge, view.getEnterAge(), view.getFeedbackAge(), 
+                view.getStart());
         view.getLayout().getChildren().setAll(view.getLoginBox());
         view.getEnterId().requestFocus();
         view.getPrimaryStage().show(); 
         view.getLoginBox().setLayoutX((SetUp.SCREEN_WIDTH / 2) - (view.getLoginBox().getWidth() / 2));
-        view.getLoginBox().setLayoutY(SetUp.SCREEN_HEIGHT / 2 - view.getLoginBox().getHeight());
+        view.getLoginBox().setLayoutY(SetUp.SCREEN_HEIGHT * .2);
         setBackground(view.getLayout(), 0);       
     }
     
@@ -107,7 +141,7 @@ public final class SetUp {
                 + "Decide which cluster contains the greater number of dots. "
                 + "Press the 'F' key if you think the left side has more dots, "
                 + "and press the 'J' key if you think the right side has more dots. "
-                + "There is no time limit. Click Next to try a practice question.");
+                + "There is no time limit. Click Next to try some practice questions.");
         instructionsText.setFont(new Font("Century Gothic", 55));
         instructionsText.setLayoutX(SCREEN_WIDTH * .1);
         instructionsText.setLayoutY(SCREEN_HEIGHT * .15);

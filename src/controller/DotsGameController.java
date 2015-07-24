@@ -177,18 +177,39 @@ public class DotsGameController implements GameController {
     }
     
     /**
-     * Action to be executed upon clicking of Start on Login screen. 
-     * Store the subject's ID and catch exception if integer not entered.
+     * Action to be executed upon clicking of Start on Login screen.
+     * 
+     * Records user inputted data and sets instructions screen.
      */
     private void onClickStartButton() {
+        theView.getFeedback().setVisible(false);
+        theView.getFeedbackAge().setVisible(false);
+        theView.getFeedbackGender().setVisible(false);
         try {
             gameController.thePlayer.setSubjectID(Integer.parseInt(theView.getEnterId().getText()));
-            theView.setInstructionsScreen(); 
         } catch (NumberFormatException ex) {
-            theView.getEnterId().setText("");
             theView.getEnterId().requestFocus();
-            theView.getFeedback().setText("That's not your ID, silly!");
+            theView.getEnterId().setText("");
+            theView.getFeedback().setVisible(true);
+            return;
+        }    
+        if (theView.getPickMale().isSelected()) {
+            gameController.thePlayer.setSubjectGender(Player.Gender.MALE);
+        } else if (theView.getPickFemale().isSelected()) {
+            gameController.thePlayer.setSubjectGender(Player.Gender.FEMALE);
+        } else {
+            theView.getFeedbackGender().setVisible(true);
+            return;
         }
+        try {
+            gameController.thePlayer.setSubjectAge(Integer.parseInt(theView.getEnterAge().getText()));
+        } catch (NumberFormatException ex) {
+            theView.getEnterAge().requestFocus();
+            theView.getEnterAge().setText("");
+            theView.getFeedbackAge().setVisible(true);
+            return;
+        }
+        theView.setInstructionsScreen(); 
     }
     
     /** 
@@ -228,12 +249,19 @@ public class DotsGameController implements GameController {
             theView.getPractice().setVisible(false);
             state = CurrentState.GAMEPLAY;
             gameState = GameState.WAITING_FOR_RESPONSE_VISIBLE;
-            SimpleIntegerProperty subjectID = new SimpleIntegerProperty(thePlayer.getSubjectID());
-            /** Reset player data */
-            thePlayer = new Player(subjectID);
-            /** Prevent 'F' or 'J' input while loading actual assessment */
+            this.resetPlayer();
             feedback_given = true;
         });
+    }
+    
+    /** 
+     * Reset the player data, but retain intrinsic subject data 
+     */
+    private void resetPlayer() {
+        SimpleIntegerProperty subjectID = new SimpleIntegerProperty(thePlayer.getSubjectID());
+        Player.Gender subjectGender = thePlayer.getSubjectGender();
+        SimpleIntegerProperty subjectAge = new SimpleIntegerProperty(thePlayer.getSubjectAge());
+        thePlayer = new Player(subjectID, subjectGender, subjectAge);
     }
     
     /** 
