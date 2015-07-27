@@ -428,13 +428,20 @@ public class DotsGameController implements GameController {
             public void handle(WorkerStateEvent e) {
                 feedback_given = false;
                 
+                GraphicsContext gcBorderLeft = theView.getLeftBorder().getGraphicsContext2D();
+                GraphicsContext gcBorderRight = theView.getRightBorder().getGraphicsContext2D();
+                gcBorderLeft.setFill(Color.BLACK);
+                gcBorderLeft.fillRect(0, 0, theView.getLeftBorder().getWidth(), theView.getLeftBorder().getHeight());
+                gcBorderRight.setFill(Color.BLACK);
+                gcBorderRight.fillRect(0, 0, theView.getRightBorder().getWidth(), theView.getRightBorder().getHeight());
+                
                 gcLeft = theView.getLeftOption().getGraphicsContext2D();
                 gcRight = theView.getRightOption().getGraphicsContext2D();
                 
                 gcLeft.setFill(CANVAS_COLOR);
                 gcLeft.fillRect(0,0,theView.getLeftOption().getWidth(),theView.getLeftOption().getHeight());
                 gcLeft.setFill(DOT_COLOR);
-                
+           
                 gcRight.setFill(CANVAS_COLOR);
                 gcRight.fillRect(0,0,theView.getRightOption().getWidth(),theView.getRightOption().getHeight());
                 gcRight.setFill(DOT_COLOR);
