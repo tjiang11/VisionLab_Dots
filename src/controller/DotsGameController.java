@@ -508,6 +508,11 @@ public class DotsGameController implements GameController {
         gcRight.setFill(CANVAS_COLOR);
         gcRight.fillRect(0, 0, theView.getRightOption().getWidth(),theView.getRightOption().getHeight());
         gcRight.setFill(DOT_COLOR);
+        
+        theView.getLeftOption().setOpacity(0.5);
+        theView.getRightOption().setOpacity(0.5);
+        theView.getLeftBorder().setOpacity(0.1);
+        theView.getRightBorder().setOpacity(0.1);
     }
 
     /**
@@ -565,6 +570,11 @@ public class DotsGameController implements GameController {
      * Show the choices.
      */
     private void paintDots() {
+        theView.getLeftOption().setOpacity(1.0);
+        theView.getRightOption().setOpacity(1.0);
+        theView.getLeftBorder().setOpacity(1.0);
+        theView.getRightBorder().setOpacity(1.0);
+        
         DotSet dotSetOne = this.currentDotsPair.getDotSetOne();
         DotSet dotSetTwo = this.currentDotsPair.getDotSetTwo();
         this.paintDotSet(dotSetOne, gcLeft);
@@ -619,11 +629,6 @@ public class DotsGameController implements GameController {
     public void recordResponseTime() {
         long responseTime = System.nanoTime() - responseTimeMetric;
         thePlayer.setResponseTime(responseTime);
-        
-        //Convert from nanoseconds to seconds.
-        double responseTimeSec = responseTime / 1000000000.0;
-        System.out.println("Your response time was: " 
-                + responseTimeSec + " seconds");
     }
     
     /**

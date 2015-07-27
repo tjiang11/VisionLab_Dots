@@ -92,7 +92,6 @@ public class DotsPairGenerator {
      */
     public void getNewPair() {
         this.setDifficulty();
-        System.out.println(this.getSameChoice());
         int dotSetOne, dotSetTwo;
         dotSetOne = this.randomGenerator.nextInt(MAX_DOTS) + 1;
         do {

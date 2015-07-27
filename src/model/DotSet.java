@@ -111,7 +111,6 @@ public class DotSet {
                 i++;
             }
         }
-        System.out.println(this.totalNumDots);
     }
     
     /**
@@ -221,7 +220,6 @@ public class DotSet {
     public void matchArea(double otherTotalArea) {
         
         double resizeRatio = Math.sqrt(otherTotalArea / this.getTotalArea());
-        System.out.println(resizeRatio);
         
         for (int diameterIndex = 0; diameterIndex < this.totalNumDots; diameterIndex++) {
             double diameterToScale = this.diameters.get(diameterIndex);

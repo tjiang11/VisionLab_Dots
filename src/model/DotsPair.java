@@ -48,8 +48,6 @@ public class DotsPair {
      */
     public DotsPair(int numDotsOne, int numDotsTwo, ControlType controlType) {
         loadConfig();
-        System.out.println("Num dots One: " + numDotsOne);
-        System.out.println("Num dots Two: " + numDotsTwo);
 
         this.dotSetOne = new DotSet(numDotsOne);
         this.dotSetTwo = new DotSet(numDotsTwo);
