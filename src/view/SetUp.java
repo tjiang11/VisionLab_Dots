@@ -181,6 +181,7 @@ public final class SetUp {
         view.getStartAssessment().setLayoutX(SetUp.SCREEN_WIDTH / 2 - view.getStartAssessment().getPrefWidth() / 2);
         view.getLayout().getChildren().setAll(view.getPracticeComplete(), view.getStartAssessment());
         view.getScene().setCursor(Cursor.DEFAULT);
+        view.getPracticeComplete().requestFocus();
     }
     
     /**
