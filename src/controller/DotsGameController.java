@@ -426,6 +426,7 @@ public class DotsGameController implements GameController {
         sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent e) {
+                gameState = GameState.WAITING_FOR_RESPONSE_VISIBLE;
                 feedback_given = false;
                 
                 GraphicsContext gcBorderLeft = theView.getLeftBorder().getGraphicsContext2D();
@@ -509,8 +510,8 @@ public class DotsGameController implements GameController {
         gcRight.fillRect(0, 0, theView.getRightOption().getWidth(),theView.getRightOption().getHeight());
         gcRight.setFill(DOT_COLOR);
         
-        theView.getLeftOption().setOpacity(0.5);
-        theView.getRightOption().setOpacity(0.5);
+        theView.getLeftOption().setOpacity(0.85);
+        theView.getRightOption().setOpacity(0.85);
         theView.getLeftBorder().setOpacity(0.1);
         theView.getRightBorder().setOpacity(0.1);
     }

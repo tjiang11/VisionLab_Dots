@@ -226,8 +226,9 @@ public class DotSet {
             double scaledDiameter = diameterToScale * resizeRatio;
             this.diameters.set(diameterIndex, scaledDiameter);
         }
+        this.recalcArea();
     }
-     
+    
     /**
      * Takes the area of this dot set X (with less area than other dot set Y) and further scales it area down by the factor
      * that other dot set Y would have had to scale down to match this dot set X. Opposite of matchArea().
@@ -245,8 +246,19 @@ public class DotSet {
             double scaledDiameter = diameterToScale * inverseResizeRatio;
             this.diameters.set(diameterIndex, scaledDiameter);
         }
+        this.recalcArea();
     }
 
+    /**
+     * Recompute and set the total area of the dotset.
+     */
+    private void recalcArea() {
+        this.totalArea = 0;
+        for (Double diameter : this.diameters) {
+            totalArea += Math.PI * Math.pow((diameter / 2), 2);
+        }
+    }
+    
     public ArrayList<Coordinate> getPositions() {
         return positions;
     }

@@ -37,6 +37,8 @@ public class DataWriter {
     public static final String DIFFICULTY = "Difficulty";
     public static final String DISTANCE = "Distance";
     public static final String CONTROL_TYPE = "Control Type";
+    public static final String NUMBER_DOTS_RATIO = "Ratio of number of dots (greater to smaller)";
+    public static final String AREA_RATIO = "Ratio of areas of dot sets (greater to smaller)";
     public static final String RESPONSE_TIME = "Response Time";
     public static final String DATE_TIME = "Date/Time";
     public static final String CONSECUTIVE_ROUND = "Consecutive Rounds";
@@ -127,7 +129,9 @@ public class DataWriter {
                 + IS_CORRECT + DELIMITER
                 + DIFFICULTY + DELIMITER
                 + DISTANCE + DELIMITER
-                + CONTROL_TYPE + DELIMITER
+                + CONTROL_TYPE + DELIMITER 
+                + NUMBER_DOTS_RATIO + DELIMITER
+                + AREA_RATIO + DELIMITER             
                 + RESPONSE_TIME + DELIMITER
                 + DATE_TIME + DELIMITER
                 + CONSECUTIVE_ROUND + "\n";
@@ -150,6 +154,8 @@ public class DataWriter {
         String difficulty = this.generateDifficultyText();
         String distance = this.generateDistanceText();
         String controlType = this.generateControlTypeText();
+        String numDotsRatio = this.generateNumDotsRatioText();
+        String areaRatio = this.generateAreaRatioText();
         String responseTime = this.generateResponseTimeText();
         String dateTime = this.generateDateTimeText();
         String consecutiveRounds = this.generateConsecutiveRoundsText();
@@ -165,6 +171,8 @@ public class DataWriter {
                 + difficulty + DELIMITER
                 + distance + DELIMITER
                 + controlType + DELIMITER
+                + numDotsRatio + DELIMITER
+                + areaRatio + DELIMITER
                 + responseTime + DELIMITER
                 + dateTime + DELIMITER
                 + consecutiveRounds + "\n";
@@ -258,6 +266,22 @@ public class DataWriter {
             return "None";
         } 
         return "-";
+    }
+    
+    private String generateNumDotsRatioText() {
+        double ratio = ((double) this.dotsPair.getDotSetOne().getTotalNumDots()) / this.dotsPair.getDotSetTwo().getTotalNumDots();
+        if (ratio < 1) {
+            ratio = 1 / ratio;
+        }
+        return Double.toString(ratio);
+    }
+    
+    private String generateAreaRatioText() {
+        double ratio = ((double) this.dotsPair.getDotSetOne().getTotalArea() / this.dotsPair.getDotSetTwo().getTotalArea());
+        if (ratio < 1) {
+            ratio = 1 / ratio;
+        }
+        return Double.toString(ratio);
     }
     
     private String generateResponseTimeText() {
