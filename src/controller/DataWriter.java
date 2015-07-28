@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.BufferedWriter;
+import java.util.logging.Logger;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -25,6 +26,8 @@ import model.Player;
  */
 public class DataWriter {
 
+    private static Logger logger = Logger.getLogger("mylog");
+    
     public static final String DELIMITER = ",";
     public static final String SUBJECT_ID = "Subject ID";
     public static final String SUBJECT_AGE = "Subject Age";
@@ -93,7 +96,8 @@ public class DataWriter {
             
             /** Create new csv file for subject if doesn't exist */
             File file = new File(path + "\\results_dots\\" + subjectId 
-                    + "\\results_" + subjectId + ".csv");            
+                    + "\\results_" + subjectId + ".csv");   
+            logger.info(file.getPath());
             String text = "";
             /** Write data to new file or append to old file */
             if (file.createNewFile()) {

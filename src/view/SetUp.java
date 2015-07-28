@@ -22,6 +22,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -143,6 +144,14 @@ public final class SetUp {
      * @return Scene the instructions scene
      */
     public static void setUpInstructionsScreen(GameGUI view) {
+        Rectangle r = new Rectangle();
+        r.setLayoutX(SCREEN_WIDTH * .09);
+        r.setLayoutY(SCREEN_HEIGHT * .07);
+        r.setWidth(SCREEN_WIDTH * .82);
+        r.setHeight(SCREEN_HEIGHT * .84);
+        r.setFill(Color.BEIGE);
+        r.setOpacity(0.5);
+        
         Text instructionsText = new Text();
         instructionsText.setText("In this assessment, for each question you will be shown two clusters of dots. "
                 + "Decide which cluster contains the greater number of dots. "
@@ -150,6 +159,7 @@ public final class SetUp {
                 + "and press the 'J' key if you think the right side has more dots. "
                 + "There is no time limit. Click Next to try some practice questions.");
         instructionsText.setFont(new Font("Century Gothic", 55));
+        instructionsText.setStyle("-fx-background-color: rgba(238, 238, 255, 0.8);");
         instructionsText.setLayoutX(SCREEN_WIDTH * .1);
         instructionsText.setLayoutY(SCREEN_HEIGHT * .15);
         instructionsText.setWrappingWidth(SCREEN_WIDTH * .8);
@@ -159,7 +169,7 @@ public final class SetUp {
         view.getNext().setPrefWidth(SCREEN_WIDTH * .06);
         view.getNext().setLayoutX(SCREEN_WIDTH / 2 - view.getNext().getPrefWidth() / 2);        
         view.getNext().setLayoutY(SCREEN_HEIGHT * .83);
-        view.getLayout().getChildren().setAll(instructionsText, view.getNext());
+        view.getLayout().getChildren().setAll(r, instructionsText, view.getNext());
     }
     
     /**

@@ -1,6 +1,7 @@
 package controller;
 
 import java.net.URL;
+import java.util.logging.Logger;
 
 import config.Config;
 import model.DotSet;
@@ -48,6 +49,8 @@ import view.GameGUI;
  * 
  */
 public class DotsGameController implements GameController {
+    
+    private static Logger logger = Logger.getLogger("mylog");
     
     final static Color CANVAS_COLOR = Color.BEIGE;
     final static Color DOT_COLOR = Color.GREEN;
@@ -630,6 +633,7 @@ public class DotsGameController implements GameController {
     public void recordResponseTime() {
         long responseTime = System.nanoTime() - responseTimeMetric;
         thePlayer.setResponseTime(responseTime);
+        logger.info("Response time: " + responseTime / 1000000000.0);
     }
     
     /**
