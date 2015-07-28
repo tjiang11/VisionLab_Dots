@@ -46,7 +46,7 @@ import javafx.stage.Screen;
 public final class SetUp {
     
     /** Background */
-    static final String BACKGROUNDS[] = {"26", "30", "16d", "14", "21", "19"};
+    static final String BACKGROUNDS[] = {"26", "30", "16d", "14", "21", "31"};
 
     /** Width and height of the computer's screen */
     static final Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();
@@ -259,12 +259,11 @@ public final class SetUp {
      * @param view The graphical user interface.
      */
     static void setUpOptions(GameGUI view) {
-        //Create buttons and set text
         view.setLeftOption(new Canvas(OPTION_WIDTH, OPTION_HEIGHT));
         view.setRightOption(new Canvas(OPTION_WIDTH, OPTION_HEIGHT));
         view.setLeftBorder(new Canvas(BORDER_WIDTH, BORDER_HEIGHT));
         view.setRightBorder(new Canvas(BORDER_WIDTH, BORDER_HEIGHT));
-      //Set absolute positions of each leftOption
+
         view.getLeftOption().setLayoutX(LEFT_OPTION_X);
         view.getLeftOption().setLayoutY(LEFT_OPTION_Y);
         view.getRightOption().setLayoutX(RIGHT_OPTION_X);
