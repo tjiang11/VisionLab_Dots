@@ -60,17 +60,10 @@ public final class SetUp {
     /** Positions of the choices the subject can pick. */
     static final int LEFT_OPTION_X = (int) (SCREEN_WIDTH * .15);
     static final int LEFT_OPTION_Y = (int) (SCREEN_HEIGHT * .15);
-    static final int OPTION_BORDER = 5;
     public static final int OPTION_WIDTH = (int) (SCREEN_WIDTH * .3);
     public static final int OPTION_HEIGHT = (int) (SCREEN_HEIGHT * .7);
-    static final int BORDER_WIDTH = (int) (OPTION_WIDTH + OPTION_BORDER * 2);
-    static final int BORDER_HEIGHT = (int) (OPTION_HEIGHT + OPTION_BORDER * 2);
-    static final int LEFT_BORDER_X = LEFT_OPTION_X - OPTION_BORDER;
-    static final int LEFT_BORDER_Y = LEFT_OPTION_Y - OPTION_BORDER;
     static final int RIGHT_OPTION_X = (int) (SCREEN_WIDTH - LEFT_OPTION_X - OPTION_WIDTH);
     static final int RIGHT_OPTION_Y = LEFT_OPTION_Y;
-    static final int RIGHT_BORDER_X = RIGHT_OPTION_X - OPTION_BORDER;
-    static final int RIGHT_BORDER_Y = RIGHT_OPTION_Y - OPTION_BORDER;
     static final int PROGRESS_BAR_X = (int) (SCREEN_WIDTH * .02);
     static final int PROGRESS_BAR_Y = (int) (SCREEN_HEIGHT * .05);
     static final int FIRST_STAR_X = (int) (SCREEN_WIDTH * .93);
@@ -227,7 +220,7 @@ public final class SetUp {
         view.setPractice(new Label("PRACTICE"));
         view.getPractice().setFont(new Font("Tahoma", 50));
 
-        view.getLayout().getChildren().setAll(view.getLeftBorder(), view.getRightBorder(), view.getGetReadyBox(), view.getProgressBar(), 
+        view.getLayout().getChildren().setAll(view.getGetReadyBox(), view.getProgressBar(), 
                 view.getLeftOption(), view.getRightOption(), view.getPractice());
         
         setStars(view);
@@ -271,18 +264,11 @@ public final class SetUp {
     static void setUpOptions(GameGUI view) {
         view.setLeftOption(new Canvas(OPTION_WIDTH, OPTION_HEIGHT));
         view.setRightOption(new Canvas(OPTION_WIDTH, OPTION_HEIGHT));
-        view.setLeftBorder(new Canvas(BORDER_WIDTH, BORDER_HEIGHT));
-        view.setRightBorder(new Canvas(BORDER_WIDTH, BORDER_HEIGHT));
 
         view.getLeftOption().setLayoutX(LEFT_OPTION_X);
         view.getLeftOption().setLayoutY(LEFT_OPTION_Y);
         view.getRightOption().setLayoutX(RIGHT_OPTION_X);
         view.getRightOption().setLayoutY(RIGHT_OPTION_Y);
-        
-        view.getLeftBorder().setLayoutX(LEFT_BORDER_X);
-        view.getLeftBorder().setLayoutY(LEFT_BORDER_Y);
-        view.getRightBorder().setLayoutX(RIGHT_BORDER_X);
-        view.getRightBorder().setLayoutY(RIGHT_BORDER_Y);
     }
 
     /**

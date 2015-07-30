@@ -81,10 +81,6 @@ public class GameGUI {
     private Canvas leftOption;
     /** Game Screen - The right choice. */
     private Canvas rightOption;
-    /** Border for the left choice. */
-    private Canvas leftBorder;
-    /** Border for the right choice. */
-    private Canvas rightBorder;
     
     /** Game Screen - Progress Bar. */
     private ProgressBar progressBar;
@@ -383,21 +379,5 @@ public class GameGUI {
 
     public void setFeedbackAge(Label feedbackAge) {
         this.feedbackAge = feedbackAge;
-    }
-
-    public Canvas getLeftBorder() {
-        return leftBorder;
-    }
-
-    public void setLeftBorder(Canvas leftBorder) {
-        this.leftBorder = leftBorder;
-    }
-
-    public Canvas getRightBorder() {
-        return rightBorder;
-    }
-
-    public void setRightBorder(Canvas rightBorder) {
-        this.rightBorder = rightBorder;
     }
 }

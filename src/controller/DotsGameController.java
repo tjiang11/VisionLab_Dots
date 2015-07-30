@@ -432,13 +432,6 @@ public class DotsGameController implements GameController {
                 gameState = GameState.WAITING_FOR_RESPONSE_VISIBLE;
                 feedback_given = false;
                 
-                GraphicsContext gcBorderLeft = theView.getLeftBorder().getGraphicsContext2D();
-                GraphicsContext gcBorderRight = theView.getRightBorder().getGraphicsContext2D();
-                gcBorderLeft.setFill(Color.BLACK);
-                gcBorderLeft.fillRect(0, 0, theView.getLeftBorder().getWidth(), theView.getLeftBorder().getHeight());
-                gcBorderRight.setFill(Color.BLACK);
-                gcBorderRight.fillRect(0, 0, theView.getRightBorder().getWidth(), theView.getRightBorder().getHeight());
-                
                 gcLeft = theView.getLeftOption().getGraphicsContext2D();
                 gcRight = theView.getRightOption().getGraphicsContext2D();
                 
@@ -515,8 +508,6 @@ public class DotsGameController implements GameController {
         
         theView.getLeftOption().setOpacity(0.85);
         theView.getRightOption().setOpacity(0.85);
-        theView.getLeftBorder().setOpacity(0.1);
-        theView.getRightBorder().setOpacity(0.1);
     }
 
     /**
@@ -576,8 +567,6 @@ public class DotsGameController implements GameController {
     private void paintDots() {
         theView.getLeftOption().setOpacity(1.0);
         theView.getRightOption().setOpacity(1.0);
-        theView.getLeftBorder().setOpacity(1.0);
-        theView.getRightBorder().setOpacity(1.0);
         
         DotSet dotSetOne = this.currentDotsPair.getDotSetOne();
         DotSet dotSetTwo = this.currentDotsPair.getDotSetTwo();
