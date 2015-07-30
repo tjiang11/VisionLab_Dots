@@ -142,26 +142,23 @@ public final class SetUp {
         r.setLayoutY(SCREEN_HEIGHT * .07);
         r.setWidth(SCREEN_WIDTH * .82);
         r.setHeight(SCREEN_HEIGHT * .84);
-        r.setFill(Color.BEIGE);
-        r.setOpacity(0.5);
+        r.setFill(Color.WHITESMOKE);
+        r.setOpacity(0.25);
         
         Text instructionsText = new Text();
-        instructionsText.setText("In this assessment, for each question you will be shown two clusters of dots. "
-                + "Decide which cluster contains the greater number of dots. "
-                + "Press the 'F' key if you think the left side has more dots, "
-                + "and press the 'J' key if you think the right side has more dots. "
-                + "There is no time limit. Click Next to try some practice questions.");
-        instructionsText.setFont(new Font("Century Gothic", 55));
-        instructionsText.setStyle("-fx-background-color: rgba(238, 238, 255, 0.8);");
+        instructionsText.setText("Click 'Next' when you're ready!");
+        instructionsText.setTextAlignment(TextAlignment.CENTER);
         instructionsText.setLayoutX(SCREEN_WIDTH * .1);
-        instructionsText.setLayoutY(SCREEN_HEIGHT * .15);
+        instructionsText.setLayoutY(SCREEN_HEIGHT * .4);
+        instructionsText.setFont(new Font("Century Gothic", 55));
         instructionsText.setWrappingWidth(SCREEN_WIDTH * .8);
+        
         view.setNext(new Button("Next"));
         view.getNext().setFont(new Font("Tahoma", 20));
         view.getNext().setPrefHeight(SCREEN_HEIGHT * .06);
         view.getNext().setPrefWidth(SCREEN_WIDTH * .06);
         view.getNext().setLayoutX(SCREEN_WIDTH / 2 - view.getNext().getPrefWidth() / 2);        
-        view.getNext().setLayoutY(SCREEN_HEIGHT * .83);
+        view.getNext().setLayoutY(SCREEN_HEIGHT * .6);
         view.getLayout().getChildren().setAll(r, instructionsText, view.getNext());
     }
     
