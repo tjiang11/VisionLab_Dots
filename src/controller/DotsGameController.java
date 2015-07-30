@@ -21,6 +21,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import view.GameGUI;
@@ -53,7 +56,7 @@ public class DotsGameController implements GameController {
     private static Logger logger = Logger.getLogger("mylog");
     
     final static Color CANVAS_COLOR = Color.BEIGE;
-    final static Color DOT_COLOR = Color.GREEN;
+    final static Color[] DOT_COLORS = {Color.GREEN, Color.BLUE, Color.RED, Color.GOLDENROD, Color.DARKMAGENTA, Color.DEEPSKYBLUE};
     
     /** Punish for wrong answers */
     static final boolean PUNISH = true;
@@ -83,6 +86,9 @@ public class DotsGameController implements GameController {
     private GraphicsContext gcLeft;
     /** Right Canvas Graphics Context */
     private GraphicsContext gcRight;
+    
+    /** Index of the current dots color in DOTS_COLORS */
+    private int currentColor;
     
     /** The subject. */
     private Player thePlayer;
@@ -142,6 +148,7 @@ public class DotsGameController implements GameController {
         this.gameController = this;
         this.dpg = new DotsPairGenerator();
         this.currentDotsPair = null;
+        this.currentColor = 0;
         this.theView = view;
         this.theScene = view.getScene();
         this.thePlayer = new Player();
@@ -382,12 +389,22 @@ public class DotsGameController implements GameController {
     private void checkBackground() {
         if (numStars % STARS_PER_BACKGROUND == 0) {
             theView.changeBackground(++backgroundNumber);
-            
-            URL applauseSound = getClass().getResource("/res/sounds/Applause.wav");
-            AudioClip applause = new AudioClip(applauseSound.toString());
-            applause.setRate(1.4);
-            applause.play();
+            if (this.currentColor < DOT_COLORS.length - 1) {
+                this.currentColor++;
+            }
+            this.applauseSound();
         }    
+    }
+    
+    /** Play applause sound */
+    private void applauseSound() {
+        URL applauseSound = getClass().getResource("/res/sounds/Applause.mp3");
+        Media applause = new Media(applauseSound.toString());
+        MediaPlayer applausePlayer = new MediaPlayer(applause);
+        applausePlayer.setAutoPlay(true);
+        applausePlayer.setRate(1.4);
+        MediaView mediaView = new MediaView(applausePlayer);
+        theView.getLayout().getChildren().add(mediaView);
     }
     
     /** If user inputs correct answer play positive feedback sound,
@@ -435,14 +452,7 @@ public class DotsGameController implements GameController {
                 gcLeft = theView.getLeftOption().getGraphicsContext2D();
                 gcRight = theView.getRightOption().getGraphicsContext2D();
                 
-                gcLeft.setFill(CANVAS_COLOR);
-                gcLeft.fillRect(0,0,theView.getLeftOption().getWidth(),theView.getLeftOption().getHeight());
-                gcLeft.setFill(DOT_COLOR);
-           
-                gcRight.setFill(CANVAS_COLOR);
-                gcRight.fillRect(0,0,theView.getRightOption().getWidth(),theView.getRightOption().getHeight());
-                gcRight.setFill(DOT_COLOR);
-                
+                clearRound();    
                 setOptions();
 
                 responseTimeMetric = System.nanoTime();
@@ -500,11 +510,9 @@ public class DotsGameController implements GameController {
     public void clearRound() {
         gcLeft.setFill(CANVAS_COLOR);
         gcLeft.fillRect(0, 0, theView.getLeftOption().getWidth(),theView.getLeftOption().getHeight());
-        gcLeft.setFill(DOT_COLOR);
         
         gcRight.setFill(CANVAS_COLOR);
         gcRight.fillRect(0, 0, theView.getRightOption().getWidth(),theView.getRightOption().getHeight());
-        gcRight.setFill(DOT_COLOR);
         
         theView.getLeftOption().setOpacity(0.85);
         theView.getRightOption().setOpacity(0.85);
@@ -604,6 +612,7 @@ public class DotsGameController implements GameController {
      * @param 
      */
     private void paintDotSet(DotSet dotSet, GraphicsContext graphicsContext) {
+        graphicsContext.setFill(DOT_COLORS[currentColor]);
         for (int i = 0; i < dotSet.getTotalNumDots(); i++) {
             
             int x = dotSet.getPositions().get(i).x;

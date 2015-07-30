@@ -48,7 +48,7 @@ public final class SetUp {
     
     /** Background */
     static final String BACKGROUNDS[] = {"26", "30", "16d", "14", "21", "31"};
-
+    
     /** Width and height of the computer's screen */
     static final Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();
     static final double SCREEN_WIDTH = primaryScreenBounds.getWidth();
