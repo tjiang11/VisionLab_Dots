@@ -28,6 +28,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javafx.stage.Popup;
 import javafx.stage.Screen;
 
 /**
@@ -47,7 +48,7 @@ import javafx.stage.Screen;
 public final class SetUp {
     
     /** Background */
-    static final String BACKGROUNDS[] = {"26", "30", "16d", "14", "21", "31"};
+    static final String BACKGROUNDS[] = {"26.png", "30.png", "32.jpg", "14.png", "21.png", "31.png"};
     
     /** Width and height of the computer's screen */
     static final Rectangle2D primaryScreenBounds = Screen.getPrimary().getBounds();
@@ -305,7 +306,7 @@ public final class SetUp {
         
         BackgroundImage bg = new BackgroundImage(
                 new Image(
-                        "/res/images/" + backgroundName + ".png", 
+                        "/res/images/" + backgroundName, 
                         SCREEN_WIDTH,
                         SCREEN_HEIGHT, 
                         false, true),
@@ -315,4 +316,44 @@ public final class SetUp {
                 BackgroundSize.DEFAULT);
         layout.setBackground(new Background(bg));
     }  
+    
+    /**
+     * Create the exit pop up asking if user wants to quit.
+     * @param view
+     */
+    public static void setExitPopup(GameGUI view) {
+        view.setExitPopup(new Popup());
+        view.getExitPopup().centerOnScreen();
+        VBox quitBox = new VBox(8);
+        quitBox.setStyle("-fx-background-color: rgba(238, 238, 255, 0.5);"
+                + "-fx-border-style: solid;"
+                + "-fx-border-width: 3px;");
+        quitBox.setPadding(new Insets(30, 30, 30, 30));
+        quitBox.setAlignment(Pos.CENTER);
+        Label quitLabel = new Label("Quit Assessment?");
+        quitLabel.setFont(new Font("Tahoma", 20));
+        Button yesButton = new Button("Yes");
+        yesButton.setOnAction(e -> {
+            System.exit(0);
+        });
+        Button noButton = new Button("No");
+        noButton.setOnAction(e -> {
+            view.getExitPopup().hide();
+            view.getScene().setCursor(Cursor.NONE);
+        });
+        view.getExitPopup().setHideOnEscape(false);
+        quitBox.getChildren().addAll(quitLabel, yesButton, noButton);
+        view.getExitPopup().getContent().addAll(quitBox);
+        quitLabel.requestFocus();
+    }
+    
+    /**
+     * Show the popup asking if user wants to quit.
+     * @param view
+     */
+    public static void showExitPopup(GameGUI view) {
+        view.getScene().setCursor(Cursor.DEFAULT);
+        view.getExitPopup().show(view.getPrimaryStage());  
+        view.getExitPopup().getContent().get(0).requestFocus();
+    }
 }

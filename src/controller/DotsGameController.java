@@ -184,6 +184,14 @@ public class DotsGameController implements GameController {
                 }
             }
         });
+        this.theScene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            public void handle(final KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                    theView.showExitPopup();
+                    keyEvent.consume();
+                }
+            }
+        });
     }
     
     /**
@@ -392,18 +400,18 @@ public class DotsGameController implements GameController {
             if (this.currentColor < DOT_COLORS.length - 1) {
                 this.currentColor++;
             }
-            this.applauseSound();
+            this.playSound("Applause.mp3", 1.4);
         }    
     }
     
-    /** Play applause sound */
-    private void applauseSound() {
-        URL applauseSound = getClass().getResource("/res/sounds/Applause.mp3");
-        Media applause = new Media(applauseSound.toString());
-        MediaPlayer applausePlayer = new MediaPlayer(applause);
-        applausePlayer.setAutoPlay(true);
-        applausePlayer.setRate(1.4);
-        MediaView mediaView = new MediaView(applausePlayer);
+    /** Play sound */
+    private void playSound(String soundFile, double rate) {
+        URL sound = getClass().getResource("/res/sounds/" + soundFile);
+        Media media = new Media(sound.toString());
+        MediaPlayer player = new MediaPlayer(media);
+        player.setAutoPlay(true);
+        player.setRate(rate);
+        MediaView mediaView = new MediaView(player);
         theView.getLayout().getChildren().add(mediaView);
     }
     
@@ -491,6 +499,8 @@ public class DotsGameController implements GameController {
     private void finishGame() {
         theView.setFinishScreen(thePlayer.getNumCorrect(), backgroundNumber);
         theView.getScene().setOnKeyPressed(null);
+        this.playSound("Applause.mp3", 1.4);
+        this.playSound("Correct1.wav", 1.4);
     }
   
     /**
